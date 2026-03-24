@@ -3,9 +3,6 @@ library(here)
 library(MASS)
 library(tidyverse)
 library(brms)
-library(beanplot)
-library(xfun)
-library(ggrain)
 library(qs2)
 
 # use "here" package to make all paths refer to the project root
@@ -104,29 +101,6 @@ blmm_exp2_rt_dist <-
 
 qs_save(blmm_exp2_rt_dist, file = here("analysis", "blmm_exp2_rt_dist.qs"))
 
-blmm_exp2_rt_dist_nonword <-
-  brm(
-    data = exp2 %>% filter(rt > .25 & rt < 1.8 & corr == 1 & StimulusType == "NOWORD"),
-    formula = bf(
-      rt ~ Condition*Gender  + (Condition*Gender | PROLIFIC_PID) + (Condition  | Target),
-      beta ~ Condition*Gender + (Condition*Gender  | PROLIFIC_PID) + (Condition  | Target) ),
-    warmup = 1000,
-    iter = 5000,
-    chains = 4,
-    sample_prior = "yes",
-    prior = priors_beta,
-    family = exgaussian(),
-    init = "0",
-    control = list(adapt_delta = 0.8),#, max_treedepth = 15),
-    cores = 4,
-    backend = "cmdstanr",
-    threads = threading(2),
-    silent = 0
-  )
-
-qs_save(blmm_exp2_rt_dist_nonword, file = here("analysis", "blmm_exp2_rt_dist_nonword.qs"))
-
-
 blmm_acc_exp2 <-
   brm(
     data = exp2 |> filter(rt > .25 & rt < 1.8 & corr != -1 & StimulusType == "WORD"),
@@ -145,4 +119,4 @@ blmm_acc_exp2 <-
     silent = 0
   )
 
-qs_save(blmm_exp2_acc, file = here("analysis", "blmm_exp2_acc.qs"))
+qs_save(blmm_acc_exp2, file = here("analysis", "blmm_acc_exp2.qs"))

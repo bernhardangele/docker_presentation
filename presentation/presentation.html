@@ -6,8 +6,8 @@
 <script src="presentation_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="presentation_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="presentation_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="presentation_files/libs/quarto-html/quarto-syntax-highlighting-a06763021a52c43c40a351ac8b799b8f.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.9.36">
+<link href="presentation_files/libs/quarto-html/quarto-syntax-highlighting-065a5179aebd64318d7ea99d77b64a9e.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.25">
 
   <meta name="author" content="Ismael Gutiérrez-Cordero">
   <meta name="author" content="Bernhard Angele">
@@ -19,9 +19,6 @@
   <link rel="stylesheet" href="presentation_files/libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="presentation_files/libs/revealjs/dist/reveal.css">
   <style>
-    /* Default styles provided by pandoc.
-    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
-    */
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -103,6 +100,7 @@
     div.csl-bib-body { }
     div.csl-entry {
       clear: both;
+      margin-bottom: 0em;
     }
     .hanging-indent div.csl-entry {
       margin-left:2em;
@@ -119,7 +117,8 @@
     div.csl-indent {
       margin-left: 2em;
     }  </style>
-  <link rel="stylesheet" href="presentation_files/libs/revealjs/dist/theme/quarto-2740581606dc327e82f18f789b69d8a0.css">
+  <link rel="stylesheet" href="presentation_files/libs/revealjs/dist/theme/quarto-534cd8e3a96973385dffff3f4709048d.css">
+  <link rel="stylesheet" href="styles.css">
   <link href="presentation_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="presentation_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="presentation_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -252,6 +251,8 @@ Bernhard Angele
 <li><a href="#/analyses-with-docker" id="/toc-analyses-with-docker">Analyses with Docker</a></li>
 <li><a href="#/reproducible-manuscripts" id="/toc-reproducible-manuscripts">Reproducible Manuscripts</a></li>
 <li><a href="#/customizing-your-container" id="/toc-customizing-your-container">Customizing Your Container</a></li>
+<li><a href="#/devcontainers-ai-agents" id="/toc-devcontainers-ai-agents">Devcontainers &amp; AI Agents</a></li>
+<li><a href="#/beyond-r-opensesame-experiments" id="/toc-beyond-r-opensesame-experiments">Beyond R: OpenSesame Experiments</a></li>
 <li><a href="#/summary" id="/toc-summary">Summary</a></li>
 </ul>
 </nav>
@@ -267,13 +268,13 @@ Bernhard Angele
 <li class="fragment">Behavioral and neuroscientific data analysis has become <strong>increasingly complex</strong></li>
 <li class="fragment">ANOVAs are no longer sufficient — researchers now use:
 <ul>
-<li class="fragment">(Generalized) Linear Mixed Models (GLMMs) via <strong>lme4</strong> <span class="citation" data-cites="bates2015fitting">(<a href="#/references" role="doc-biblioref" onclick="">Bates et al. 2015</a>)</span></li>
-<li class="fragment">Bayesian multilevel models via <strong>brms</strong> <span class="citation" data-cites="burkner2017brms">(<a href="#/references" role="doc-biblioref" onclick="">Bürkner 2017</a>)</span></li>
+<li class="fragment">(Generalized) Linear Mixed Models (GLMMs) via <strong>lme4</strong> <span class="citation" data-cites="bates2015fitting">(<a href="#/references" role="doc-biblioref" onclick="">Bates et al., 2015</a>)</span></li>
+<li class="fragment">Bayesian multilevel models via <strong>brms</strong> <span class="citation" data-cites="burkner2017brms">(<a href="#/references" role="doc-biblioref" onclick="">Bürkner, 2017</a>)</span></li>
 </ul></li>
 <li class="fragment"><em>brms</em> requires a large number of dependencies:
 <ul>
-<li class="fragment">Stan <span class="citation" data-cites="stan2025">(<a href="#/references" role="doc-biblioref" onclick="">Stan Development Team 2025b</a>)</span> for MCMC sampling</li>
-<li class="fragment">CmdStanR <span class="citation" data-cites="gabry2025">(<a href="#/references" role="doc-biblioref" onclick="">Gabry et al. 2025</a>)</span> (recommended) or RStan <span class="citation" data-cites="rstan2025">(<a href="#/references" role="doc-biblioref" onclick="">Stan Development Team 2025a</a>)</span></li>
+<li class="fragment">Stan <span class="citation" data-cites="stan2025">(<a href="#/references" role="doc-biblioref" onclick="">Stan Development Team, 2025b</a>)</span> for MCMC sampling</li>
+<li class="fragment">CmdStanR <span class="citation" data-cites="gabry2025">(<a href="#/references" role="doc-biblioref" onclick="">Gabry et al., 2025</a>)</span> (recommended) or RStan <span class="citation" data-cites="rstan2025">(<a href="#/references" role="doc-biblioref" onclick="">Stan Development Team, 2025a</a>)</span></li>
 <li class="fragment">A modern C++ compiler (RTools on Windows, XCode on Mac)</li>
 </ul></li>
 </ul>
@@ -304,7 +305,7 @@ Bernhard Angele
 </blockquote>
 <ul>
 <li class="fragment">Package versions change constantly, breaking analysis code</li>
-<li class="fragment">Solutions like <strong>renv</strong> <span class="citation" data-cites="renv">(<a href="#/references" role="doc-biblioref" onclick="">Ushey and Wickham 2025</a>)</span> require significant effort from both authors and readers</li>
+<li class="fragment">Solutions like <strong>renv</strong> <span class="citation" data-cites="renv">(<a href="#/references" role="doc-biblioref" onclick="">Ushey &amp; Wickham, 2025</a>)</span> require significant effort from both authors and readers</li>
 <li class="fragment">We need a simpler, more robust approach…</li>
 </ul>
 </section></section>
@@ -370,13 +371,13 @@ Bernhard Angele
 <h2>Available Base Images</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<p><strong>🐳 Rocker Project</strong> <span class="citation" data-cites="rocker2017">(<a href="#/references" role="doc-biblioref" onclick="">Boettiger and Eddelbuettel 2017</a>)</span></p>
+<p><strong>🐳 Rocker Project</strong> <span class="citation" data-cites="rocker2017">(<a href="#/references" role="doc-biblioref" onclick="">Boettiger &amp; Eddelbuettel, 2017</a>)</span></p>
 <ul>
 <li><a href="https://rocker-project.org" class="uri">https://rocker-project.org</a></li>
 <li>R + RStudio + tidyverse/verse</li>
 <li>Versioned by R version</li>
 <li>Best for <strong>Intel/AMD64</strong> (Windows/Linux)</li>
-<li><code>rocker/verse:4.4.2</code></li>
+<li><code>rocker/verse:4.5.3</code></li>
 </ul>
 </div><div class="column" style="width:50%;">
 <p><strong>🐳 b-data Images</strong></p>
@@ -394,12 +395,12 @@ Bernhard Angele
 <h2>Our “Analysis in a Box” Image</h2>
 <p>We built a custom image on top of Rocker verse that includes:</p>
 <ul>
-<li>✅ Base R + RStudio Server</li>
-<li>✅ tidyverse and data processing packages</li>
-<li>✅ <strong>brms</strong> with CmdStanR (pre-compiled!)</li>
-<li>✅ lme4, buildmer, emmeans</li>
-<li>✅ Quarto + apaquarto template</li>
-<li>✅ LaTeX / TinyTeX for PDF rendering</li>
+<li>base R + RStudio Server</li>
+<li>tidyverse and data processing packages</li>
+<li><strong>brms</strong> with CmdStanR (pre-compiled!)</li>
+<li>lme4, buildmer, emmeans</li>
+<li>Quarto + apaquarto template</li>
+<li>LaTeX / TinyTeX for PDF rendering</li>
 </ul>
 <p><strong>Available on Docker Hub:</strong><br>
 <a href="https://hub.docker.com/r/bangele1/analysis-in-a-box-rocker" class="uri">https://hub.docker.com/r/bangele1/analysis-in-a-box-rocker</a></p>
@@ -516,22 +517,43 @@ Open <code>analysis_with_docker.RProj</code> to load the project in RStudio.</p>
 </section>
 <section id="example-dataset" class="slide level2">
 <h2>Example Dataset</h2>
-<p>We replicate analyses from <span class="citation" data-cites="angele2023does">Angele et al. (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span> — a lexical decision experiment examining masked priming effects:</p>
+<p>A lexical decision experiment with a flanker manipulation:</p>
 <div class="columns">
 <div class="column" style="width:50%;">
 <p><strong>Design</strong></p>
 <ul>
-<li><strong>Prime-target relationship</strong>: related vs.&nbsp;unrelated</li>
-<li><strong>Prime duration</strong>: 33 ms, 50 ms, 67 ms</li>
+<li><strong>Stimulus type</strong>: words vs.&nbsp;pseudowords</li>
+<li><strong>Gender</strong>: feminine vs.&nbsp;masculine targets</li>
+<li><strong>Condition</strong>: concordant (AGR) vs.&nbsp;discordant (DIS) flanker articles</li>
 <li>Participants and items crossed (fully counterbalanced)</li>
 </ul>
 </div><div class="column" style="width:50%;">
 <p><strong>Outcome measures</strong></p>
 <ul>
-<li>Response times (RT) in ms</li>
-<li>Accuracy (proportion correct)</li>
+<li>Response times (RT) in seconds</li>
+<li>Accuracy (correct lexical decisions)</li>
 </ul>
-<p><strong>Key question:</strong> Do related primes speed up target recognition?</p>
+<p><strong>Key question:</strong> Do gender-congruent flankers facilitate lexical decisions?</p>
+</div></div>
+</section>
+<section id="example-trial-display" class="slide level2">
+<h2>Example Trial Display</h2>
+<p>Each trial shows a target word (or pseudoword) flanked by articles.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Concordant (AGR)</strong></p>
+<p>Target word <em>mesa</em> (feminine) — flanker <em>la</em> (feminine)</p>
+<div style="width:340px; height:180px; border:3px solid #000; border-radius:8px; background:#fff; display:flex; align-items:center; justify-content:center; margin:10px auto;">
+<p><span style="color:#000; font-size:28px; font-family:monospace; letter-spacing:8px;">la&nbsp;&nbsp;mesa&nbsp;&nbsp;la</span></p>
+</div>
+<p>Press <strong>L</strong> for feminine</p>
+</div><div class="column" style="width:50%;">
+<p><strong>Discordant (DIS)</strong></p>
+<p>Target word <em>mesa</em> (feminine) — flanker <em>el</em> (masculine)</p>
+<div style="width:340px; height:180px; border:3px solid #000; border-radius:8px; background:#fff; display:flex; align-items:center; justify-content:center; margin:10px auto;">
+<p><span style="color:#000; font-size:28px; font-family:monospace; letter-spacing:8px;">el&nbsp;&nbsp;mesa&nbsp;&nbsp;el</span></p>
+</div>
+<p>Press <strong>A</strong> for masculine</p>
 </div></div>
 </section>
 <section id="mixed-effects-models-why" class="slide level2">
@@ -540,48 +562,72 @@ Open <code>analysis_with_docker.RProj</code> to load the project in RStudio.</p>
 Mixed models include <strong>random effects</strong> for both:</p>
 <div class="columns">
 <div class="column" style="width:33%;">
+<div style="font-size:0.8em;">
 <p><strong>Random intercepts only</strong></p>
 <p>Each participant has a different baseline RT, but the <em>effect</em> of condition is the same for everyone.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a>RT <span class="sc">~</span> condition <span class="sc">+</span> </span>
-<span id="cb9-2"><a href=""></a>  (<span class="dv">1</span> <span class="sc">|</span> participant) <span class="sc">+</span> </span>
-<span id="cb9-3"><a href=""></a>  (<span class="dv">1</span> <span class="sc">|</span> item)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a>rt <span class="sc">~</span> Condition <span class="sc">*</span> Gender <span class="sc">+</span> </span>
+<span id="cb9-2"><a href=""></a>  (<span class="dv">1</span> <span class="sc">|</span> PROLIFIC_PID) <span class="sc">+</span> </span>
+<span id="cb9-3"><a href=""></a>  (<span class="dv">1</span> <span class="sc">|</span> Target)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div><div class="column" style="width:33%;">
+<div style="font-size:0.8em;">
 <p><strong>Random intercepts + slopes</strong></p>
 <p>Each participant also has a different <em>effect</em> of condition.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a>RT <span class="sc">~</span> condition <span class="sc">+</span> </span>
-<span id="cb10-2"><a href=""></a>  (condition <span class="sc">|</span> participant) <span class="sc">+</span></span>
-<span id="cb10-3"><a href=""></a>  (condition <span class="sc">|</span> item)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a>rt <span class="sc">~</span> Condition <span class="sc">*</span> Gender <span class="sc">+</span> </span>
+<span id="cb10-2"><a href=""></a>  (Condition <span class="sc">*</span> Gender <span class="sc">|</span> PROLIFIC_PID) <span class="sc">+</span></span>
+<span id="cb10-3"><a href=""></a>  (Condition <span class="sc">|</span> Target)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div><div class="column" style="width:33%;">
+<div style="font-size:0.8em;">
 <p><strong>Why it matters</strong></p>
 <ul>
 <li>Avoids pseudoreplication</li>
 <li>By-item random effects: items differ in difficulty</li>
 <li>Converges to correct Type I error rates</li>
 </ul>
+</div>
 </div></div>
 </section>
 <section id="frequentist-analysis-lme4-buildmer" class="slide level2">
 <h2>Frequentist Analysis: lme4 + buildmer</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href=""></a><span class="fu">library</span>(lme4)</span>
-<span id="cb11-2"><a href=""></a><span class="fu">library</span>(buildmer)</span>
-<span id="cb11-3"><a href=""></a></span>
-<span id="cb11-4"><a href=""></a><span class="co"># Load and filter data</span></span>
-<span id="cb11-5"><a href=""></a>data <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(</span>
-<span id="cb11-6"><a href=""></a>  <span class="st">"data_angele_et_al_brm/data_exp1/clean/data_exp1.csv"</span></span>
-<span id="cb11-7"><a href=""></a>) <span class="sc">|&gt;</span></span>
-<span id="cb11-8"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(acc <span class="sc">!=</span> <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb11-9"><a href=""></a></span>
-<span id="cb11-10"><a href=""></a><span class="co"># Fit maximal random effects model using buildmer</span></span>
-<span id="cb11-11"><a href=""></a><span class="co"># (automatically finds the largest converging model)</span></span>
-<span id="cb11-12"><a href=""></a>model_rt <span class="ot">&lt;-</span> <span class="fu">buildmer</span>(</span>
-<span id="cb11-13"><a href=""></a>  RT <span class="sc">~</span> condition <span class="sc">*</span> prime_duration <span class="sc">+</span></span>
-<span id="cb11-14"><a href=""></a>    (condition <span class="sc">*</span> prime_duration <span class="sc">|</span> participant) <span class="sc">+</span></span>
-<span id="cb11-15"><a href=""></a>    (condition <span class="sc">*</span> prime_duration <span class="sc">|</span> target),</span>
-<span id="cb11-16"><a href=""></a>  <span class="at">data =</span> data,</span>
-<span id="cb11-17"><a href=""></a>  <span class="at">buildmerControl =</span> <span class="fu">buildmerControl</span>(<span class="at">direction =</span> <span class="st">"order"</span>)</span>
-<span id="cb11-18"><a href=""></a>)</span>
-<span id="cb11-19"><a href=""></a></span>
-<span id="cb11-20"><a href=""></a><span class="fu">summary</span>(model_rt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed model fit by REML
+(p-values based on Wald z-scores) ['lmerMod']
+Formula: rt ~ 1 + Condition + Gender + Condition:Gender + (1 + Gender |  
+    PROLIFIC_PID) + (1 | Target)
+   Data: exp2
+
+REML criterion at convergence: -15656
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-4.4756 -0.5587 -0.1609  0.3446  9.8085 
+
+Random effects:
+ Groups       Name        Variance  Std.Dev. Corr  
+ Target       (Intercept) 0.0012406 0.03522        
+ PROLIFIC_PID (Intercept) 0.0069311 0.08325        
+              GenderMAS   0.0001223 0.01106  -0.58 
+ Residual                 0.0158952 0.12608        
+Number of obs: 12544, groups:  Target, 245; PROLIFIC_PID, 59
+
+Fixed effects:
+                        Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)             0.452335   0.011527  39.241  &lt; 2e-16 ***
+ConditionDIS            0.008815   0.003207   2.749  0.00599 ** 
+GenderMAS              -0.002648   0.005714  -0.463  0.64314    
+ConditionDIS:GenderMAS  0.001104   0.004542   0.243  0.80798    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+            (Intr) CndDIS GndMAS
+ConditinDIS -0.137              
+GenderMAS   -0.369  0.276       
+CndDIS:GMAS  0.097 -0.706 -0.398</code></pre>
+</div>
+</div>
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -591,27 +637,32 @@ Mixed models include <strong>random effects</strong> for both:</p>
 <p><strong>Note</strong></p>
 </div>
 <div class="callout-content">
-<p><strong>buildmer</strong> <span class="citation" data-cites="buildmer">(<a href="#/references" role="doc-biblioref" onclick=""><strong>buildmer?</strong></a>)</span> automatically reduces the random effects structure to find the maximal converging model — saving considerable trial and error.</p>
+<p><strong>buildmer</strong> <span class="citation" data-cites="voeten2025buildmer">(<a href="#/references" role="doc-biblioref" onclick="">Voeten, 2025</a>)</span> automatically reduces the random effects structure to find the maximal converging model — saving considerable trial and error.</p>
 </div>
 </div>
 </div>
 </section>
-<section id="bayesian-analysis-brms" class="slide level2">
-<h2>Bayesian Analysis: brms</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a><span class="fu">library</span>(brms)</span>
-<span id="cb12-2"><a href=""></a></span>
-<span id="cb12-3"><a href=""></a><span class="co"># Fit Bayesian LMM for RT</span></span>
-<span id="cb12-4"><a href=""></a>model_brms_rt <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
-<span id="cb12-5"><a href=""></a>  RT <span class="sc">~</span> condition <span class="sc">*</span> prime_duration <span class="sc">+</span></span>
-<span id="cb12-6"><a href=""></a>    (condition <span class="sc">*</span> prime_duration <span class="sc">|</span> participant) <span class="sc">+</span></span>
-<span id="cb12-7"><a href=""></a>    (condition <span class="sc">*</span> prime_duration <span class="sc">|</span> target),</span>
-<span id="cb12-8"><a href=""></a>  <span class="at">data   =</span> data,</span>
-<span id="cb12-9"><a href=""></a>  <span class="at">family =</span> <span class="fu">lognormal</span>(),</span>
-<span id="cb12-10"><a href=""></a>  <span class="at">chains =</span> <span class="dv">4</span>,</span>
-<span id="cb12-11"><a href=""></a>  <span class="at">iter   =</span> <span class="dv">4000</span>,</span>
-<span id="cb12-12"><a href=""></a>  <span class="at">cores  =</span> <span class="dv">4</span>,</span>
-<span id="cb12-13"><a href=""></a>  <span class="at">backend =</span> <span class="st">"cmdstanr"</span>   <span class="co"># Use CmdStanR backend</span></span>
-<span id="cb12-14"><a href=""></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="bayesian-analysis-brms-pre-computed" class="slide level2">
+<h2>Bayesian Analysis: brms (pre-computed)</h2>
+<div style="font-size:0.55em;">
+<p>Models were fit using an <strong>exgaussian</strong> distribution for RT:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a><span class="co"># RT model (words only, correct responses, 0.25s &lt; RT &lt; 1.8s)</span></span>
+<span id="cb12-2"><a href=""></a>blmm_exp2_rt_dist <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb12-3"><a href=""></a>  <span class="at">data =</span> exp2 <span class="sc">|&gt;</span> <span class="fu">filter</span>(rt <span class="sc">&gt;</span> .<span class="dv">25</span> <span class="sc">&amp;</span> rt <span class="sc">&lt;</span> <span class="fl">1.8</span> <span class="sc">&amp;</span> corr <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> StimulusType <span class="sc">==</span> <span class="st">"WORD"</span>),</span>
+<span id="cb12-4"><a href=""></a>  <span class="at">formula =</span> <span class="fu">bf</span>(</span>
+<span id="cb12-5"><a href=""></a>    rt <span class="sc">~</span> Condition <span class="sc">*</span> Gender <span class="sc">+</span> (Condition <span class="sc">*</span> Gender <span class="sc">|</span> PROLIFIC_PID) <span class="sc">+</span> (Condition <span class="sc">|</span> Target),</span>
+<span id="cb12-6"><a href=""></a>    beta <span class="sc">~</span> Condition <span class="sc">*</span> Gender <span class="sc">+</span> (Condition <span class="sc">*</span> Gender <span class="sc">|</span> PROLIFIC_PID) <span class="sc">+</span> (Condition <span class="sc">|</span> Target)</span>
+<span id="cb12-7"><a href=""></a>  ),</span>
+<span id="cb12-8"><a href=""></a>  <span class="at">family =</span> <span class="fu">exgaussian</span>(), <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">iter =</span> <span class="dv">5000</span>, <span class="at">backend =</span> <span class="st">"cmdstanr"</span></span>
+<span id="cb12-9"><a href=""></a>)</span>
+<span id="cb12-10"><a href=""></a></span>
+<span id="cb12-11"><a href=""></a><span class="co"># Accuracy model (Bernoulli logistic regression)</span></span>
+<span id="cb12-12"><a href=""></a>blmm_acc_exp2 <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb12-13"><a href=""></a>  <span class="at">data =</span> exp2 <span class="sc">|&gt;</span> <span class="fu">filter</span>(rt <span class="sc">&gt;</span> .<span class="dv">25</span> <span class="sc">&amp;</span> rt <span class="sc">&lt;</span> <span class="fl">1.8</span> <span class="sc">&amp;</span> corr <span class="sc">!=</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">&amp;</span> StimulusType <span class="sc">==</span> <span class="st">"WORD"</span>),</span>
+<span id="cb12-14"><a href=""></a>  <span class="at">formula =</span> <span class="fu">bf</span>(corr <span class="sc">~</span> Condition <span class="sc">*</span> Gender <span class="sc">+</span> (Condition <span class="sc">*</span> Gender <span class="sc">|</span> PROLIFIC_PID) <span class="sc">+</span> (Condition <span class="sc">|</span> Target)),</span>
+<span id="cb12-15"><a href=""></a>  <span class="at">family =</span> <span class="fu">bernoulli</span>(), <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">iter =</span> <span class="dv">5000</span>, <span class="at">backend =</span> <span class="st">"cmdstanr"</span></span>
+<span id="cb12-16"><a href=""></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <div class="callout callout-tip callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -621,8 +672,1100 @@ Mixed models include <strong>random effects</strong> for both:</p>
 <p><strong>Tip</strong></p>
 </div>
 <div class="callout-content">
-<p><strong>CmdStanR</strong> is recommended over RStan: it supports the latest Stan features including <strong>hyperthreading</strong> (<code>threads_per_chain</code>) for faster sampling.</p>
+<p>Models were run separately via <code>analysis_exp2.R</code> and saved with <strong>qs2</strong> for fast loading. No need to re-run MCMC in the presentation!</p>
 </div>
+</div>
+</div>
+</section>
+<section id="results-rt-model-ex-gaussian" class="slide level2">
+<h2>Results: RT Model (Ex-Gaussian)</h2>
+<div class="cell">
+<div id="tbl-rt" class="cell quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-tbl">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-rt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1
+</figcaption>
+<div aria-describedby="tbl-rt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="dpbbjfawqw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#dpbbjfawqw table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#dpbbjfawqw thead, #dpbbjfawqw tbody, #dpbbjfawqw tfoot, #dpbbjfawqw tr, #dpbbjfawqw td, #dpbbjfawqw th {
+  border-style: none;
+}
+
+#dpbbjfawqw p {
+  margin: 0;
+  padding: 0;
+}
+
+#dpbbjfawqw .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#dpbbjfawqw .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#dpbbjfawqw .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#dpbbjfawqw .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#dpbbjfawqw .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#dpbbjfawqw .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dpbbjfawqw .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#dpbbjfawqw .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#dpbbjfawqw .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#dpbbjfawqw .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#dpbbjfawqw .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#dpbbjfawqw .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#dpbbjfawqw .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#dpbbjfawqw .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#dpbbjfawqw .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#dpbbjfawqw .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#dpbbjfawqw .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#dpbbjfawqw .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#dpbbjfawqw .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dpbbjfawqw .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#dpbbjfawqw .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#dpbbjfawqw .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#dpbbjfawqw .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dpbbjfawqw .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#dpbbjfawqw .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#dpbbjfawqw .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dpbbjfawqw .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dpbbjfawqw .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#dpbbjfawqw .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dpbbjfawqw .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#dpbbjfawqw .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dpbbjfawqw .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#dpbbjfawqw .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dpbbjfawqw .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#dpbbjfawqw .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dpbbjfawqw .gt_left {
+  text-align: left;
+}
+
+#dpbbjfawqw .gt_center {
+  text-align: center;
+}
+
+#dpbbjfawqw .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#dpbbjfawqw .gt_font_normal {
+  font-weight: normal;
+}
+
+#dpbbjfawqw .gt_font_bold {
+  font-weight: bold;
+}
+
+#dpbbjfawqw .gt_font_italic {
+  font-style: italic;
+}
+
+#dpbbjfawqw .gt_super {
+  font-size: 65%;
+}
+
+#dpbbjfawqw .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#dpbbjfawqw .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#dpbbjfawqw .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#dpbbjfawqw .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#dpbbjfawqw .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#dpbbjfawqw .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#dpbbjfawqw .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#dpbbjfawqw .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#dpbbjfawqw div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment caption-top" data-quarto-bootstrap="false">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="gt_col_headings gt_spanner_row header">
+<th rowspan="2" id="a::stub" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
+<th colspan="2" id="Estimate" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><div class="gt_column_spanner">
+Estimate
+</div></th>
+<th colspan="2" id="Credible Interval (b)" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><div class="gt_column_spanner">
+Credible Interval (b)
+</div></th>
+</tr>
+<tr class="gt_col_headings even">
+<th id="estimate" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">b</th>
+<th id="SE" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">SE</th>
+<th id="lower" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2.5%</th>
+<th id="upper" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">97.5%</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="gt_group_heading_row odd">
+<th colspan="5" id="<span data-qmd-base64=&quot;UGFyYW1ldGVyOiAkXG11JA==&quot;><span class='gt_from_md'>Parameter: \(\mu\)</span></span>" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">Parameter: <span class="math inline">\(\mu\)</span></th>
+</tr>
+<tr class="gt_row_group_first even">
+<th id="stub_1_1" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">Intercept</th>
+<td class="gt_row gt_right" headers="mu stub_1_1 estimate" style="font-weight: bold">0.446</td>
+<td class="gt_row gt_right" headers="mu stub_1_1 SE" style="font-weight: bold">0.010</td>
+<td class="gt_row gt_right" headers="mu stub_1_1 lower" style="font-weight: bold">0.426</td>
+<td class="gt_row gt_right" headers="mu stub_1_1 upper" style="font-weight: bold">0.466</td>
+</tr>
+<tr class="odd">
+<th id="stub_1_2" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">Concordant vs. Discordant Flanker</th>
+<td class="gt_row gt_right" headers="mu stub_1_2 estimate" style="font-weight: bold">−0.005</td>
+<td class="gt_row gt_right" headers="mu stub_1_2 SE" style="font-weight: bold">0.001</td>
+<td class="gt_row gt_right" headers="mu stub_1_2 lower" style="font-weight: bold">−0.007</td>
+<td class="gt_row gt_right" headers="mu stub_1_2 upper" style="font-weight: bold">−0.003</td>
+</tr>
+<tr class="even">
+<th id="stub_1_3" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">Grammatical Gender (Feminine vs. Masculine)</th>
+<td class="gt_row gt_right" headers="mu stub_1_3 estimate">0.000</td>
+<td class="gt_row gt_right" headers="mu stub_1_3 SE">0.002</td>
+<td class="gt_row gt_right" headers="mu stub_1_3 lower">−0.003</td>
+<td class="gt_row gt_right" headers="mu stub_1_3 upper">0.003</td>
+</tr>
+<tr class="odd">
+<th id="stub_1_4" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">Concordant vs. Discordant:Grammatical Gender</th>
+<td class="gt_row gt_right" headers="mu stub_1_4 estimate">0.001</td>
+<td class="gt_row gt_right" headers="mu stub_1_4 SE">0.001</td>
+<td class="gt_row gt_right" headers="mu stub_1_4 lower">−0.001</td>
+<td class="gt_row gt_right" headers="mu stub_1_4 upper">0.003</td>
+</tr>
+<tr class="gt_group_heading_row even">
+<th colspan="5" id="<span data-qmd-base64=&quot;UGFyYW1ldGVyOiAkXGJldGEk&quot;><span class='gt_from_md'>Parameter: \(\beta\)</span></span>" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">Parameter: <span class="math inline">\(\beta\)</span></th>
+</tr>
+<tr class="gt_row_group_first odd">
+<th id="stub_1_5" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">Intercept</th>
+<td class="gt_row gt_right" headers="beta stub_1_5 estimate" style="font-weight: bold">−2.345</td>
+<td class="gt_row gt_right" headers="beta stub_1_5 SE" style="font-weight: bold">0.050</td>
+<td class="gt_row gt_right" headers="beta stub_1_5 lower" style="font-weight: bold">−2.444</td>
+<td class="gt_row gt_right" headers="beta stub_1_5 upper" style="font-weight: bold">−2.245</td>
+</tr>
+<tr class="even">
+<th id="stub_1_6" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">Concordant vs. Discordant Flanker</th>
+<td class="gt_row gt_right" headers="beta stub_1_6 estimate" style="font-weight: bold">−0.044</td>
+<td class="gt_row gt_right" headers="beta stub_1_6 SE" style="font-weight: bold">0.014</td>
+<td class="gt_row gt_right" headers="beta stub_1_6 lower" style="font-weight: bold">−0.072</td>
+<td class="gt_row gt_right" headers="beta stub_1_6 upper" style="font-weight: bold">−0.017</td>
+</tr>
+<tr class="odd">
+<th id="stub_1_7" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">Grammatical Gender (Feminine vs. Masculine)</th>
+<td class="gt_row gt_right" headers="beta stub_1_7 estimate">−0.001</td>
+<td class="gt_row gt_right" headers="beta stub_1_7 SE">0.015</td>
+<td class="gt_row gt_right" headers="beta stub_1_7 lower">−0.031</td>
+<td class="gt_row gt_right" headers="beta stub_1_7 upper">0.029</td>
+</tr>
+<tr class="even">
+<th id="stub_1_8" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">Concordant vs. Discordant:Grammatical Gender</th>
+<td class="gt_row gt_right" headers="beta stub_1_8 estimate">0.017</td>
+<td class="gt_row gt_right" headers="beta stub_1_8 SE">0.013</td>
+<td class="gt_row gt_right" headers="beta stub_1_8 lower">−0.008</td>
+<td class="gt_row gt_right" headers="beta stub_1_8 upper">0.042</td>
+</tr>
+</tbody><tfoot>
+<tr class="gt_sourcenotes odd">
+<td colspan="5" class="gt_sourcenote">Note: <em>b</em> = coefficient estimate; <em>SE</em> = standard error; <em>2.5%</em> and <em>97.5%</em> = lower and upper bounds of the 95% credible interval. Coefficients for which the 95% credible interval does not include 0 are shown in <strong>bold</strong>.</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="results-accuracy-model-bernoulli" class="slide level2">
+<h2>Results: Accuracy Model (Bernoulli)</h2>
+<div class="cell">
+<div id="tbl-acc" class="cell quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-tbl">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-acc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2
+</figcaption>
+<div aria-describedby="tbl-acc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="ntwnzawhiv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ntwnzawhiv table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#ntwnzawhiv thead, #ntwnzawhiv tbody, #ntwnzawhiv tfoot, #ntwnzawhiv tr, #ntwnzawhiv td, #ntwnzawhiv th {
+  border-style: none;
+}
+
+#ntwnzawhiv p {
+  margin: 0;
+  padding: 0;
+}
+
+#ntwnzawhiv .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ntwnzawhiv .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#ntwnzawhiv .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ntwnzawhiv .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ntwnzawhiv .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ntwnzawhiv .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ntwnzawhiv .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ntwnzawhiv .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ntwnzawhiv .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ntwnzawhiv .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ntwnzawhiv .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ntwnzawhiv .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ntwnzawhiv .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#ntwnzawhiv .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#ntwnzawhiv .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ntwnzawhiv .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ntwnzawhiv .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ntwnzawhiv .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ntwnzawhiv .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ntwnzawhiv .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#ntwnzawhiv .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#ntwnzawhiv .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#ntwnzawhiv .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ntwnzawhiv .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#ntwnzawhiv .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#ntwnzawhiv .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ntwnzawhiv .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ntwnzawhiv .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ntwnzawhiv .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ntwnzawhiv .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ntwnzawhiv .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ntwnzawhiv .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ntwnzawhiv .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ntwnzawhiv .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ntwnzawhiv .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ntwnzawhiv .gt_left {
+  text-align: left;
+}
+
+#ntwnzawhiv .gt_center {
+  text-align: center;
+}
+
+#ntwnzawhiv .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ntwnzawhiv .gt_font_normal {
+  font-weight: normal;
+}
+
+#ntwnzawhiv .gt_font_bold {
+  font-weight: bold;
+}
+
+#ntwnzawhiv .gt_font_italic {
+  font-style: italic;
+}
+
+#ntwnzawhiv .gt_super {
+  font-size: 65%;
+}
+
+#ntwnzawhiv .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#ntwnzawhiv .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#ntwnzawhiv .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#ntwnzawhiv .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#ntwnzawhiv .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#ntwnzawhiv .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#ntwnzawhiv .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#ntwnzawhiv .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#ntwnzawhiv div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment caption-top" data-quarto-bootstrap="false">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="gt_col_headings gt_spanner_row header">
+<th rowspan="2" id="a::stub" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
+<th colspan="2" id="Estimate" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><div class="gt_column_spanner">
+Estimate
+</div></th>
+<th colspan="2" id="Credible Interval (b)" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><div class="gt_column_spanner">
+Credible Interval (b)
+</div></th>
+</tr>
+<tr class="gt_col_headings even">
+<th id="estimate" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">b</th>
+<th id="SE" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">SE</th>
+<th id="lower" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2.5%</th>
+<th id="upper" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">97.5%</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<th id="stub_1_1" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">Intercept</th>
+<td class="gt_row gt_right" headers="stub_1_1 estimate" style="font-weight: bold">2.903</td>
+<td class="gt_row gt_right" headers="stub_1_1 SE" style="font-weight: bold">0.090</td>
+<td class="gt_row gt_right" headers="stub_1_1 lower" style="font-weight: bold">2.731</td>
+<td class="gt_row gt_right" headers="stub_1_1 upper" style="font-weight: bold">3.083</td>
+</tr>
+<tr class="even">
+<th id="stub_1_2" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">Concordant vs. Discordant Flanker</th>
+<td class="gt_row gt_right" headers="stub_1_2 estimate">0.065</td>
+<td class="gt_row gt_right" headers="stub_1_2 SE">0.048</td>
+<td class="gt_row gt_right" headers="stub_1_2 lower">−0.030</td>
+<td class="gt_row gt_right" headers="stub_1_2 upper">0.156</td>
+</tr>
+<tr class="odd">
+<th id="stub_1_3" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">Grammatical Gender (Feminine vs. Masculine)</th>
+<td class="gt_row gt_right" headers="stub_1_3 estimate">0.044</td>
+<td class="gt_row gt_right" headers="stub_1_3 SE">0.064</td>
+<td class="gt_row gt_right" headers="stub_1_3 lower">−0.083</td>
+<td class="gt_row gt_right" headers="stub_1_3 upper">0.169</td>
+</tr>
+<tr class="even">
+<th id="stub_1_4" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">Concordant vs. Discordant:Grammatical Gender</th>
+<td class="gt_row gt_right" headers="stub_1_4 estimate">−0.033</td>
+<td class="gt_row gt_right" headers="stub_1_4 SE">0.041</td>
+<td class="gt_row gt_right" headers="stub_1_4 lower">−0.114</td>
+<td class="gt_row gt_right" headers="stub_1_4 upper">0.046</td>
+</tr>
+</tbody><tfoot>
+<tr class="gt_sourcenotes odd">
+<td colspan="5" class="gt_sourcenote">Note: <em>b</em> = log-odds coefficient estimate; <em>SE</em> = standard error; <em>2.5%</em> and <em>97.5%</em> = lower and upper bounds of the 95% credible interval. Coefficients for which the 95% credible interval does not include 0 are shown in <strong>bold</strong>.</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+</figure>
 </div>
 </div>
 </section>
@@ -678,53 +1821,29 @@ Mixed models include <strong>random effects</strong> for both:</p>
 <p>Docker makes Bayesian analyses <strong>accessible</strong> — no need to manually install Stan!</p>
 </div>
 </section>
-<section id="results-visualising-the-data" class="slide level2">
-<h2>Results: Visualising the Data</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href=""></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb13-2"><a href=""></a><span class="fu">library</span>(papaja)</span>
-<span id="cb13-3"><a href=""></a></span>
-<span id="cb13-4"><a href=""></a><span class="co"># Plot mean RT by condition and participant</span></span>
-<span id="cb13-5"><a href=""></a>participant_rel <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
-<span id="cb13-6"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(stimulus_type <span class="sc">==</span> <span class="st">"Word"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb13-7"><a href=""></a>  <span class="fu">group_by</span>(participant, condition) <span class="sc">|&gt;</span></span>
-<span id="cb13-8"><a href=""></a>  <span class="fu">summarise</span>(<span class="at">mean_rt =</span> <span class="fu">mean</span>(RT, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
-<span id="cb13-9"><a href=""></a></span>
-<span id="cb13-10"><a href=""></a><span class="fu">ggplot</span>(participant_rel, <span class="fu">aes</span>(condition, mean_rt)) <span class="sc">+</span></span>
-<span id="cb13-11"><a href=""></a>  <span class="fu">geom_line</span>(</span>
-<span id="cb13-12"><a href=""></a>    <span class="fu">aes</span>(<span class="at">group =</span> participant, <span class="at">color =</span> <span class="fu">as.factor</span>(participant)),</span>
-<span id="cb13-13"><a href=""></a>    <span class="at">linewidth =</span> <span class="fl">0.6</span>, <span class="at">alpha =</span> <span class="fl">0.4</span></span>
-<span id="cb13-14"><a href=""></a>  ) <span class="sc">+</span></span>
-<span id="cb13-15"><a href=""></a>  <span class="fu">stat_summary</span>(</span>
-<span id="cb13-16"><a href=""></a>    <span class="fu">aes</span>(<span class="at">group =</span> <span class="dv">1</span>), <span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"line"</span>,</span>
-<span id="cb13-17"><a href=""></a>    <span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"black"</span></span>
-<span id="cb13-18"><a href=""></a>  ) <span class="sc">+</span></span>
-<span id="cb13-19"><a href=""></a>  <span class="fu">stat_summary</span>(</span>
-<span id="cb13-20"><a href=""></a>    <span class="fu">aes</span>(<span class="at">group =</span> <span class="dv">1</span>), <span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>,</span>
-<span id="cb13-21"><a href=""></a>    <span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"black"</span></span>
-<span id="cb13-22"><a href=""></a>  ) <span class="sc">+</span></span>
-<span id="cb13-23"><a href=""></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Prime-target relationship"</span>, <span class="at">y =</span> <span class="st">"Response times (ms)"</span>) <span class="sc">+</span></span>
-<span id="cb13-24"><a href=""></a>  papaja<span class="sc">::</span><span class="fu">theme_apa</span>() <span class="sc">+</span></span>
-<span id="cb13-25"><a href=""></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
+<section id="results-visualizing-the-data" class="slide level2">
+<h2>Results: Visualizing the Data</h2>
+<p>Lines show individual participant means; points and bold lines show group means.</p>
+
+<img data-src="presentation_files/figure-revealjs/unnamed-chunk-3-1.png" width="960" class="r-stretch"></section>
 <section id="post-hoc-comparisons-with-emmeans" class="slide level2">
 <h2>Post-hoc Comparisons with emmeans</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href=""></a><span class="fu">library</span>(emmeans)</span>
-<span id="cb14-2"><a href=""></a></span>
-<span id="cb14-3"><a href=""></a><span class="co"># Extract estimated marginal means</span></span>
-<span id="cb14-4"><a href=""></a>emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(model_rt, <span class="sc">~</span> condition <span class="sc">*</span> prime_duration)</span>
-<span id="cb14-5"><a href=""></a></span>
-<span id="cb14-6"><a href=""></a><span class="co"># Pairwise comparisons: related vs. unrelated at each prime duration</span></span>
-<span id="cb14-7"><a href=""></a><span class="fu">contrast</span>(emm, <span class="at">method =</span> <span class="st">"pairwise"</span>, <span class="at">by =</span> <span class="st">"prime_duration"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Output:</p>
-<pre><code>prime_duration = 33ms:
-  contrast              estimate   SE  df t.ratio p.value
-  related - unrelated     -18.3  4.2 189  -4.36   &lt;.001
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Gender = FEM:
+ contrast  estimate lower.HPD upper.HPD
+ AGR - DIS  -0.0076   -0.0131  -0.00187
 
-prime_duration = 50ms:
-  contrast              estimate   SE  df t.ratio p.value
-  related - unrelated     -22.1  4.5 191  -4.91   &lt;.001</code></pre>
+Gender = MAS:
+ contrast  estimate lower.HPD upper.HPD
+ AGR - DIS  -0.0121   -0.0179  -0.00661
+
+Point estimate displayed: median 
+HPD interval probability: 0.95 </code></pre>
+</div>
+</div>
 <div class="fragment">
-<p>Related primes <strong>significantly reduced</strong> response times compared to unrelated primes.</p>
+<p>Concordant flankers <strong>credibly speed up</strong> response times for feminine and masculine targets.</p>
 </div>
 </section></section>
 <section>
@@ -738,7 +1857,7 @@ prime_duration = 50ms:
 <li class="fragment"><span class="citation" data-cites="munafo2017manifesto">Munafò et al. (<a href="#/references" role="doc-biblioref" onclick="">2017</a>)</span>: need for open data and transparent analysis workflows</li>
 <li class="fragment"><span class="citation" data-cites="ince2012case">Ince et al. (<a href="#/references" role="doc-biblioref" onclick="">2012</a>)</span>: computational results cannot be evaluated without the code</li>
 <li class="fragment"><span class="citation" data-cites="lindsay2023plea">Lindsay (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span>: computational reproducibility must be verified <em>before</em> publishing</li>
-<li class="fragment"><span class="citation" data-cites="morey2016peer"><span class="nocase">Morey et al.</span> (<a href="#/references" role="doc-biblioref" onclick="">2016</a>)</span>: reviewers should not evaluate manuscripts without data and analysis pipeline</li>
+<li class="fragment"><span class="citation" data-cites="morey2016peer">Morey et al. (<a href="#/references" role="doc-biblioref" onclick="">2016</a>)</span>: reviewers should not evaluate manuscripts without data and analysis pipeline</li>
 </ul>
 </section>
 <section id="quarto-for-reproducible-manuscripts" class="slide level2">
@@ -747,24 +1866,21 @@ prime_duration = 50ms:
 <div class="columns">
 <div class="column" style="width:50%;">
 <p><strong>Prose</strong> (Markdown)</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb16-1"><a href=""></a>The related prime condition </span>
-<span id="cb16-2"><a href=""></a>was <span class="in">`r round(estimate, 1)`</span> ms </span>
-<span id="cb16-3"><a href=""></a>faster than unrelated </span>
-<span id="cb16-4"><a href=""></a>(*p* &lt; .001).</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The concordant condition was <strong>X.X</strong> ms faster than discordant (<em>p</em> &lt; .001).</p>
 </div><div class="column" style="width:50%;">
 <p><strong>Code</strong> (R or Python chunks)</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href=""></a><span class="co">#| label: tbl-summary</span></span>
-<span id="cb17-2"><a href=""></a><span class="co">#| tbl-cap: "Descriptive statistics"</span></span>
-<span id="cb17-3"><a href=""></a></span>
-<span id="cb17-4"><a href=""></a>data <span class="sc">|&gt;</span></span>
-<span id="cb17-5"><a href=""></a>  <span class="fu">group_by</span>(condition) <span class="sc">|&gt;</span></span>
-<span id="cb17-6"><a href=""></a>  <span class="fu">summarise</span>(<span class="at">M =</span> <span class="fu">mean</span>(RT), <span class="at">SD =</span> <span class="fu">sd</span>(RT)) <span class="sc">|&gt;</span></span>
-<span id="cb17-7"><a href=""></a>  <span class="fu">flextable</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href=""></a><span class="co">#| label: tbl-summary</span></span>
+<span id="cb14-2"><a href=""></a><span class="co">#| tbl-cap: "Descriptive statistics"</span></span>
+<span id="cb14-3"><a href=""></a></span>
+<span id="cb14-4"><a href=""></a>data <span class="sc">|&gt;</span></span>
+<span id="cb14-5"><a href=""></a>  <span class="fu">group_by</span>(Condition, Gender) <span class="sc">|&gt;</span></span>
+<span id="cb14-6"><a href=""></a>  <span class="fu">summarise</span>(<span class="at">M =</span> <span class="fu">mean</span>(rt), <span class="at">SD =</span> <span class="fu">sd</span>(rt)) <span class="sc">|&gt;</span></span>
+<span id="cb14-7"><a href=""></a>  <span class="fu">flextable</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
 <div class="fragment">
 <ul>
 <li>Output formats: HTML, PDF (via LaTeX), Word</li>
-<li>Compatible with <strong>apaquarto</strong> <span class="citation" data-cites="schneider2025apaquarto">(<a href="#/references" role="doc-biblioref" onclick="">Schneider 2025</a>)</span> for APA-formatted manuscripts</li>
+<li>Compatible with <strong>apaquarto</strong> <span class="citation" data-cites="schneider2025apaquarto">(<a href="#/references" role="doc-biblioref" onclick="">Schneider, 2025</a>)</span> for APA-formatted manuscripts</li>
 </ul>
 </div>
 </section>
@@ -804,7 +1920,7 @@ prime_duration = 50ms:
 ├── data/
 │   └── experiment_data.csv     # Raw data
 └── outputs/
-    ├── model_rt.qs             # Cached model results
+    ├── model_rt.qs2            # Cached model results
     └── figures/                # Generated figures</code></pre>
 <div class="callout callout-tip callout-titled callout-style-default">
 <div class="callout-body">
@@ -815,7 +1931,7 @@ prime_duration = 50ms:
 <p><strong>Tip</strong></p>
 </div>
 <div class="callout-content">
-<p>Cache computationally intensive operations (like brms models) with <code>cache: true</code> or save them with <code>qs2::qsave()</code> so the manuscript compiles quickly on subsequent runs.</p>
+<p>Cache computationally intensive operations (like brms models) with <code>cache: true</code> or save them with <code>qs2::qs_save()</code> so the manuscript compiles quickly on subsequent runs.</p>
 </div>
 </div>
 </div>
@@ -828,32 +1944,32 @@ prime_duration = 50ms:
 <section id="building-on-an-existing-image" class="slide level2">
 <h2>Building on an Existing Image</h2>
 <p>To add packages to the base image, create a <code>Dockerfile</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode numberSource dockerfile number-lines code-with-copy"><code class="sourceCode dockerfile"><span id="cb19-1"><a href=""></a><span class="kw">FROM</span> bangele1/analysis-in-a-box-rocker:latest</span>
-<span id="cb19-2"><a href=""></a></span>
-<span id="cb19-3"><a href=""></a><span class="co"># Install additional R packages</span></span>
-<span id="cb19-4"><a href=""></a><span class="kw">RUN</span> <span class="ex">R</span> <span class="at">-e</span> <span class="st">"install.packages(c('mgcv', 'gratia', 'itsadug'))"</span></span>
-<span id="cb19-5"><a href=""></a></span>
-<span id="cb19-6"><a href=""></a><span class="co"># Install additional LaTeX packages</span></span>
-<span id="cb19-7"><a href=""></a><span class="kw">RUN</span> <span class="ex">tlmgr</span> install booktabs multirow</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource dockerfile number-lines code-with-copy"><code class="sourceCode dockerfile"><span id="cb16-1"><a href=""></a><span class="kw">FROM</span> bangele1/analysis-in-a-box-rocker:latest</span>
+<span id="cb16-2"><a href=""></a></span>
+<span id="cb16-3"><a href=""></a><span class="co"># Install additional R packages</span></span>
+<span id="cb16-4"><a href=""></a><span class="kw">RUN</span> <span class="ex">R</span> <span class="at">-e</span> <span class="st">"install.packages(c('mgcv', 'gratia', 'itsadug'))"</span></span>
+<span id="cb16-5"><a href=""></a></span>
+<span id="cb16-6"><a href=""></a><span class="co"># Install additional LaTeX packages</span></span>
+<span id="cb16-7"><a href=""></a><span class="kw">RUN</span> <span class="ex">tlmgr</span> install booktabs multirow</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Build and push your custom image:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href=""></a><span class="ex">docker</span> build <span class="at">-t</span> myusername/my-analysis-image:latest .</span>
-<span id="cb20-2"><a href=""></a><span class="ex">docker</span> push myusername/my-analysis-image:latest</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href=""></a><span class="ex">docker</span> build <span class="at">-t</span> myusername/my-analysis-image:latest .</span>
+<span id="cb17-2"><a href=""></a><span class="ex">docker</span> push myusername/my-analysis-image:latest</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="docker-compose-with-more-options" class="slide level2">
 <h2>Docker Compose with More Options</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb21-1"><a href=""></a><span class="fu">services</span><span class="kw">:</span></span>
-<span id="cb21-2"><a href=""></a><span class="at">  </span><span class="fu">analysis-in-a-box</span><span class="kw">:</span></span>
-<span id="cb21-3"><a href=""></a><span class="at">    </span><span class="fu">image</span><span class="kw">:</span><span class="at"> bangele1/analysis-in-a-box-rocker:latest</span></span>
-<span id="cb21-4"><a href=""></a><span class="at">    </span><span class="fu">environment</span><span class="kw">:</span></span>
-<span id="cb21-5"><a href=""></a><span class="at">      </span><span class="kw">-</span><span class="at"> PASSWORD=yourpassword</span></span>
-<span id="cb21-6"><a href=""></a><span class="at">      </span><span class="kw">-</span><span class="at"> ROOT=true</span><span class="co">          # Enable sudo inside container</span></span>
-<span id="cb21-7"><a href=""></a><span class="at">    </span><span class="fu">ports</span><span class="kw">:</span></span>
-<span id="cb21-8"><a href=""></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">"8787:8787"</span></span>
-<span id="cb21-9"><a href=""></a><span class="at">    </span><span class="fu">volumes</span><span class="kw">:</span></span>
-<span id="cb21-10"><a href=""></a><span class="at">      </span><span class="kw">-</span><span class="at"> .:/home/rstudio</span><span class="co">    # Working directory</span></span>
-<span id="cb21-11"><a href=""></a><span class="at">      </span><span class="kw">-</span><span class="at"> ./data:/data:ro</span><span class="co">    # Read-only data directory</span></span>
-<span id="cb21-12"><a href=""></a><span class="at">    </span><span class="fu">cpus</span><span class="kw">:</span><span class="at"> </span><span class="st">"4"</span><span class="co">              # Limit CPU usage (standard Compose)</span></span>
-<span id="cb21-13"><a href=""></a><span class="at">    </span><span class="fu">mem_limit</span><span class="kw">:</span><span class="at"> 8g</span><span class="co">          # Limit memory usage (standard Compose)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb18-1"><a href=""></a><span class="fu">services</span><span class="kw">:</span></span>
+<span id="cb18-2"><a href=""></a><span class="at">  </span><span class="fu">analysis-in-a-box</span><span class="kw">:</span></span>
+<span id="cb18-3"><a href=""></a><span class="at">    </span><span class="fu">image</span><span class="kw">:</span><span class="at"> bangele1/analysis-in-a-box-rocker:latest</span></span>
+<span id="cb18-4"><a href=""></a><span class="at">    </span><span class="fu">environment</span><span class="kw">:</span></span>
+<span id="cb18-5"><a href=""></a><span class="at">      </span><span class="kw">-</span><span class="at"> PASSWORD=yourpassword</span></span>
+<span id="cb18-6"><a href=""></a><span class="at">      </span><span class="kw">-</span><span class="at"> ROOT=true</span><span class="co">          # Enable sudo inside container</span></span>
+<span id="cb18-7"><a href=""></a><span class="at">    </span><span class="fu">ports</span><span class="kw">:</span></span>
+<span id="cb18-8"><a href=""></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">"8787:8787"</span></span>
+<span id="cb18-9"><a href=""></a><span class="at">    </span><span class="fu">volumes</span><span class="kw">:</span></span>
+<span id="cb18-10"><a href=""></a><span class="at">      </span><span class="kw">-</span><span class="at"> .:/home/rstudio</span><span class="co">    # Working directory</span></span>
+<span id="cb18-11"><a href=""></a><span class="at">      </span><span class="kw">-</span><span class="at"> ./data:/data:ro</span><span class="co">    # Read-only data directory</span></span>
+<span id="cb18-12"><a href=""></a><span class="at">    </span><span class="fu">cpus</span><span class="kw">:</span><span class="at"> </span><span class="st">"4"</span><span class="co">              # Limit CPU usage (standard Compose)</span></span>
+<span id="cb18-13"><a href=""></a><span class="at">    </span><span class="fu">mem_limit</span><span class="kw">:</span><span class="at"> 8g</span><span class="co">          # Limit memory usage (standard Compose)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="key-docker-commands" class="slide level2">
 <h2>Key Docker Commands</h2>
@@ -901,21 +2017,163 @@ prime_duration = 50ms:
 </table>
 </section></section>
 <section>
+<section id="devcontainers-ai-agents" class="title-slide slide level1 center">
+<h1>Devcontainers &amp; AI Agents</h1>
+
+</section>
+<section id="dev-containers-in-vs-code" class="slide level2 smaller">
+<h2>Dev Containers in VS Code</h2>
+<div style="font-size:0.85em;">
+<p><strong>Dev Containers</strong> let you open any project inside a fully configured Docker container directly in VS Code.</p>
+<ul>
+<li>Uses a <code>.devcontainer/devcontainer.json</code> file to define the environment</li>
+<li>VS Code connects to the container — full IntelliSense, debugging, terminal</li>
+<li>Same environment on every machine, every collaborator</li>
+<li>Also works with <strong>GitHub Codespaces</strong> — a full VS Code dev environment in the browser, powered by the same container</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode numberSource json number-lines code-with-copy"><code class="sourceCode json"><span id="cb19-1"><a href=""></a><span class="fu">{</span></span>
+<span id="cb19-2"><a href=""></a>  <span class="dt">"name"</span><span class="fu">:</span> <span class="st">"R Analysis"</span><span class="fu">,</span></span>
+<span id="cb19-3"><a href=""></a>  <span class="dt">"image"</span><span class="fu">:</span> <span class="st">"bangele1/analysis-in-a-box-rocker:latest"</span><span class="fu">,</span></span>
+<span id="cb19-4"><a href=""></a>  <span class="dt">"customizations"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb19-5"><a href=""></a>    <span class="dt">"vscode"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb19-6"><a href=""></a>      <span class="dt">"extensions"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb19-7"><a href=""></a>        <span class="st">"REditorSupport.r"</span><span class="ot">,</span></span>
+<span id="cb19-8"><a href=""></a>        <span class="st">"quarto.quarto"</span><span class="ot">,</span></span>
+<span id="cb19-9"><a href=""></a>        <span class="st">"ms-toolsai.jupyter"</span></span>
+<span id="cb19-10"><a href=""></a>      <span class="ot">]</span></span>
+<span id="cb19-11"><a href=""></a>    <span class="fu">}</span></span>
+<span id="cb19-12"><a href=""></a>  <span class="fu">}</span></span>
+<span id="cb19-13"><a href=""></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="dev-containers-ai-agents" class="slide level2 smaller">
+<h2>Dev Containers + AI Agents</h2>
+<div style="font-size:0.85em;">
+<p>Dev containers unlock powerful <strong>AI-assisted coding workflows</strong> in VS Code:</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>GitHub Copilot / Copilot Chat</strong></p>
+<ul>
+<li>Autocomplete R, Stan, and Quarto code</li>
+<li>Ask questions about your data or model output inline</li>
+<li>Works inside the container — same packages as your analysis</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>AI Agent Tools (e.g., Claude Code, opencode)</strong></p>
+<ul>
+<li>Autonomous agents that read, edit, and run code</li>
+<li>Install packages, fix errors, write tests — all inside the container</li>
+<li>Reproducible: the agent works in your exact environment</li>
+</ul>
+</div></div>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Important</strong></p>
+</div>
+<div class="callout-content">
+<p><strong>Security</strong>: AI agents confined to a devcontainer cannot access your host filesystem, credentials, or other projects. The container acts as a sandbox — agents can only see and modify files you mount into it.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>Combine <code>devcontainer.json</code> with a Docker image to give AI agents a <strong>fully specified environment</strong> — no ambiguity about package versions or system dependencies.</p>
+</div>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="beyond-r-opensesame-experiments" class="title-slide slide level1 center">
+<h1>Beyond R: OpenSesame Experiments</h1>
+
+</section>
+<section id="testing-experiments-with-docker" class="slide level2">
+<h2>Testing Experiments with Docker</h2>
+<p>Docker isn’t just for R analyses — use it to <strong>test behavioral experiments</strong> before deploying in the lab.</p>
+<div style="font-size:0.8em;">
+<div class="columns">
+<div class="column" style="width:70%;">
+<p><strong>OpenSesame Test Container</strong></p>
+<ul>
+<li>Pre-built image: <a href="https://hub.docker.com/r/bangele1/opensesame-test-container" class="uri">https://hub.docker.com/r/bangele1/opensesame-test-container</a></li>
+<li>OpenSesame + PsychoPy + PyGaze</li>
+<li>Virtual desktop via NoVNC — access the GUI in your browser</li>
+<li>Runs on <strong>amd64 and arm64</strong> (Apple Silicon)</li>
+</ul>
+</div><div class="column" style="width:30%;">
+<p><strong>Use cases</strong></p>
+<ul>
+<li>Test experiments before running participants</li>
+<li>Share reproducible experiment environments with collaborators</li>
+<li>Run on any machine — no local install needed</li>
+</ul>
+</div></div>
+</div>
+</section>
+<section id="opensesame-getting-started" class="slide level2 smaller">
+<h2>OpenSesame: Getting Started</h2>
+<div style="font-size:0.85em;">
+<p>Create a <code>docker-compose.yml</code> in your experiment folder:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb20-1"><a href=""></a><span class="fu">services</span><span class="kw">:</span></span>
+<span id="cb20-2"><a href=""></a><span class="at">  </span><span class="fu">opensesame-dev</span><span class="kw">:</span></span>
+<span id="cb20-3"><a href=""></a><span class="at">    </span><span class="fu">image</span><span class="kw">:</span><span class="at"> bangele1/opensesame-test-container</span></span>
+<span id="cb20-4"><a href=""></a><span class="at">    </span><span class="fu">volumes</span><span class="kw">:</span></span>
+<span id="cb20-5"><a href=""></a><span class="at">      </span><span class="kw">-</span><span class="at"> ..:/workspaces/experiments</span></span>
+<span id="cb20-6"><a href=""></a><span class="at">    </span><span class="fu">ports</span><span class="kw">:</span></span>
+<span id="cb20-7"><a href=""></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">"8080:8080"</span></span>
+<span id="cb20-8"><a href=""></a><span class="at">    </span><span class="fu">cap_add</span><span class="kw">:</span></span>
+<span id="cb20-9"><a href=""></a><span class="at">      </span><span class="kw">-</span><span class="at"> SYS_ADMIN</span></span>
+<span id="cb20-10"><a href=""></a><span class="at">    </span><span class="fu">restart</span><span class="kw">:</span><span class="at"> unless-stopped</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Then run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href=""></a><span class="ex">docker</span> compose up <span class="at">-d</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Open <strong><a href="http://localhost:8080" class="uri">http://localhost:8080</a></strong> in your browser to access the virtual desktop with OpenSesame.</p>
+</div>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>The container uses <code>Xvfb</code> + <code>x11vnc</code> + <code>novnc</code> to render the GUI in the browser — no display server needed on the host machine.</p>
+</div>
+</div>
+</div>
+</section></section>
+<section>
 <section id="summary" class="title-slide slide level1 center">
 <h1>Summary</h1>
 
 </section>
 <section id="what-weve-covered" class="slide level2">
 <h2>What We’ve Covered</h2>
+<div style="font-size:0.8em;">
 <ol type="1">
 <li class="fragment"><strong>The Problem</strong>: Complex R environments are hard to install and replicate</li>
 <li class="fragment"><strong>Docker</strong>: Containers provide isolated, reproducible environments</li>
 <li class="fragment"><strong>Available Images</strong>: Rocker project and b-data images for R + RStudio</li>
 <li class="fragment"><strong>Running the Container</strong>: One command to get a full R/RStudio/brms environment</li>
 <li class="fragment"><strong>Analyses</strong>: lme4/buildmer for frequentist, brms/CmdStanR for Bayesian models</li>
+<li class="fragment"><strong>Caching</strong>: qs2 for fast loading of pre-computed brms models</li>
 <li class="fragment"><strong>Reproducible Manuscripts</strong>: Quarto + Docker = fully reproducible research</li>
 <li class="fragment"><strong>Customization</strong>: Docker Compose and Dockerfiles for advanced use cases</li>
+<li class="fragment"><strong>Dev Containers + AI Agents</strong>: VS Code dev containers with Copilot and AI coding tools</li>
 </ol>
+</div>
 </section>
 <section id="getting-started-today" class="slide level2">
 <h2>Getting Started Today</h2>
@@ -940,45 +2198,45 @@ prime_duration = 50ms:
 </section>
 <section id="references" class="slide level2 smaller scrollable">
 <h2>References</h2>
-<div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-angele2023does" class="csl-entry" role="listitem">
-Angele, Bernhard, Ana Baciero, Pablo Gómez, and Manuel Perea. 2023. <span>“Does Online Masked Priming Pass the Test? The Effects of Prime Exposure Duration on Masked Identity Priming.”</span> <em>Behavior Research Methods</em> 55 (1): 151–67. <a href="https://doi.org/10.3758/s13428-021-01742-y">https://doi.org/10.3758/s13428-021-01742-y</a>.
-</div>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
 <div id="ref-bates2015fitting" class="csl-entry" role="listitem">
-Bates, Douglas, Martin Mächler, Ben Bolker, and Steve Walker. 2015. <span>“Fitting Linear Mixed-Effects Models Using Lme4.”</span> <em>Journal of Statistical Software</em> 67 (1): 1–48. <a href="https://doi.org/10.18637/jss.v067.i01">https://doi.org/10.18637/jss.v067.i01</a>.
+Bates, D., Mächler, M., Bolker, B., &amp; Walker, S. (2015). Fitting linear mixed-effects models using lme4. <em>Journal of Statistical Software</em>, <em>67</em>(1), 1–48. <a href="https://doi.org/10.18637/jss.v067.i01">https://doi.org/10.18637/jss.v067.i01</a>
 </div>
 <div id="ref-rocker2017" class="csl-entry" role="listitem">
-Boettiger, Carl, and Dirk Eddelbuettel. 2017. <span>“<span class="nocase">An Introduction to Rocker: Docker Containers for R</span>.”</span> <em><span>The R Journal</span></em> 9 (2): 527–36. <a href="https://doi.org/10.32614/RJ-2017-065">https://doi.org/10.32614/RJ-2017-065</a>.
+Boettiger, C., &amp; Eddelbuettel, D. (2017). <span class="nocase">An Introduction to Rocker: Docker Containers for R</span>. <em><span>The R Journal</span></em>, <em>9</em>(2), 527–536. <a href="https://doi.org/10.32614/RJ-2017-065">https://doi.org/10.32614/RJ-2017-065</a>
 </div>
 <div id="ref-burkner2017brms" class="csl-entry" role="listitem">
-Bürkner, Paul-Christian. 2017. <span>“Brms: An r Package for Bayesian Multilevel Models Using Stan.”</span> <em>Journal of Statistical Software</em> 80 (1): 1–28. <a href="https://doi.org/10.18637/jss.v080.i01">https://doi.org/10.18637/jss.v080.i01</a>.
+Bürkner, P.-C. (2017). Brms: An r package for bayesian multilevel models using stan. <em>Journal of Statistical Software</em>, <em>80</em>(1), 1–28. <a href="https://doi.org/10.18637/jss.v080.i01">https://doi.org/10.18637/jss.v080.i01</a>
 </div>
 <div id="ref-gabry2025" class="csl-entry" role="listitem">
-Gabry, Jonah, Rok Češnovar, Andrew Johnson, and Steve Bronder. 2025. <em>Cmdstanr: R Interface to ’CmdStan’</em>. <a href="https://mc-stan.org/cmdstanr/">https://mc-stan.org/cmdstanr/</a>.
+Gabry, J., Češnovar, R., Johnson, A., &amp; Bronder, S. (2025). <em>Cmdstanr: R interface to ’CmdStan’</em>. <a href="https://mc-stan.org/cmdstanr/">https://mc-stan.org/cmdstanr/</a>
 </div>
 <div id="ref-ince2012case" class="csl-entry" role="listitem">
-Ince, Darrel C., Les Hatton, and John Graham-Cumming. 2012. <span>“The Case for Open Computer Programs.”</span> <em>Nature</em> 482 (7386): 485–88. <a href="https://doi.org/10.1038/nature10836">https://doi.org/10.1038/nature10836</a>.
+Ince, D. C., Hatton, L., &amp; Graham-Cumming, J. (2012). The case for open computer programs. <em>Nature</em>, <em>482</em>(7386), 485–488. <a href="https://doi.org/10.1038/nature10836">https://doi.org/10.1038/nature10836</a>
 </div>
 <div id="ref-lindsay2023plea" class="csl-entry" role="listitem">
-Lindsay, D. Stephen. 2023. <span>“A Plea to Psychology Professional Societies That Publish Journals: Assess Computational Reproducibility.”</span> <em>Meta-Psychology</em> 7 (4). <a href="https://doi.org/10.15626/MP.2023.4020">https://doi.org/10.15626/MP.2023.4020</a>.
+Lindsay, D. S. (2023). A plea to psychology professional societies that publish journals: Assess computational reproducibility. <em>Meta-Psychology</em>, <em>7</em>(4). <a href="https://doi.org/10.15626/MP.2023.4020">https://doi.org/10.15626/MP.2023.4020</a>
 </div>
 <div id="ref-morey2016peer" class="csl-entry" role="listitem">
-<span class="nocase">Morey, Richard D., Christopher D. Chambers, Peter J. Etchells, et al.</span> 2016. <span>“The Peer Reviewers’ Openness Initiative: Incentivizing Open Research Practices Through Peer Review.”</span> <em>Royal Society Open Science</em> 3 (1): 150547. <a href="https://doi.org/10.1098/rsos.150547">https://doi.org/10.1098/rsos.150547</a>.
+Morey, R. D., Chambers, C. D., Etchells, P. J., Harris, C. R., Hoekstra, R., Lakens, D., Lewandowsky, S., Coker Morey, C., Newman, D. P., Schönbrodt, F. D., Vanpaemel, W., et al. (2016). The peer reviewers’ openness initiative: Incentivizing open research practices through peer review. <em>Royal Society Open Science</em>, <em>3</em>(1), 150547. <a href="https://doi.org/10.1098/rsos.150547">https://doi.org/10.1098/rsos.150547</a>
 </div>
 <div id="ref-munafo2017manifesto" class="csl-entry" role="listitem">
-Munafò, Marcus R., Brian A. Nosek, Dorothy V. M. Bishop, et al. 2017. <span>“A Manifesto for Reproducible Science.”</span> <em>Nature Human Behaviour</em> 1 (1): 0021. <a href="https://doi.org/10.1038/s41562-016-0021">https://doi.org/10.1038/s41562-016-0021</a>.
+Munafò, M. R., Nosek, B. A., Bishop, D. V. M., Button, K. S., Chambers, C. D., Sert, N. P. du, Simonsohn, U., Wagenmakers, E.-J., Ware, J. J., &amp; Ioannidis, J. P. A. (2017). A manifesto for reproducible science. <em>Nature Human Behaviour</em>, <em>1</em>(1), 0021. <a href="https://doi.org/10.1038/s41562-016-0021">https://doi.org/10.1038/s41562-016-0021</a>
 </div>
 <div id="ref-schneider2025apaquarto" class="csl-entry" role="listitem">
-Schneider, William Joel. 2025. <em>Apaquarto</em>. Released. <a href="https://wjschne.github.io/apaquarto/">https://wjschne.github.io/apaquarto/</a>.
+Schneider, W. J. (2025). <em>Apaquarto</em> [Computer software]. <a href="https://wjschne.github.io/apaquarto/">https://wjschne.github.io/apaquarto/</a>
 </div>
 <div id="ref-rstan2025" class="csl-entry" role="listitem">
-Stan Development Team. 2025a. <em>Rstan: R Interface to Stan</em>. V. 2.32.6. Released. <a href="https://mc-stan.org/rstan/">https://mc-stan.org/rstan/</a>.
+Stan Development Team. (2025a). <em>Rstan: R interface to stan</em> (Version 2.32.6) [Computer software]. <a href="https://mc-stan.org/rstan/">https://mc-stan.org/rstan/</a>
 </div>
 <div id="ref-stan2025" class="csl-entry" role="listitem">
-Stan Development Team. 2025b. <em>Stan: A Probabilistic Programming Language</em>. V. 2.35.0. Released. <a href="https://mc-stan.org/">https://mc-stan.org/</a>.
+Stan Development Team. (2025b). <em>Stan: A probabilistic programming language</em> (Version 2.35.0) [Computer software]. <a href="https://mc-stan.org/">https://mc-stan.org/</a>
 </div>
 <div id="ref-renv" class="csl-entry" role="listitem">
-Ushey, Kevin, and Hadley Wickham. 2025. <em>Renv: Project Environments</em>. <a href="https://github.com/rstudio/renv">https://github.com/rstudio/renv</a>.
+Ushey, K., &amp; Wickham, H. (2025). <em>Renv: Project environments</em>. <a href="https://github.com/rstudio/renv">https://github.com/rstudio/renv</a>
+</div>
+<div id="ref-voeten2025buildmer" class="csl-entry" role="listitem">
+Voeten, C. C. (2025). <em>Buildmer: Stepwise elimination and term reordering for mixed-effects regression</em>. <a href="https://cran.r-project.org/package=buildmer">https://cran.r-project.org/package=buildmer</a>
 </div>
 </div>
 
@@ -1200,6 +2458,44 @@ Ushey, Kevin, and Hadley Wickham. 2025. <em>Renv: Project Environments</em>. <a 
         ]
       });
     </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
     <script id="quarto-html-after-body" type="application/javascript">
       window.document.addEventListener("DOMContentLoaded", function (event) {
         const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")

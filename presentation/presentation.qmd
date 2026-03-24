@@ -22,7 +22,9 @@ format:
     transition: slide
     incremental: false
     chalkboard: true
+    css: styles.css
 bibliography: references.bib
+csl: apa.csl
 ---
 
 # The Problem
@@ -222,11 +224,11 @@ The CLI/terminal window must remain open for the container to stay running.
 Inside RStudio, open the **Terminal** tab and run:
 
 ```bash
-git clone https://github.com/ismaelgutier/analysis_with_docker.git
+git clone https://github.com/bernhardangele/docker_presentation.git
 ```
 
 This downloads the example data and analysis scripts.  
-Open `analysis_with_docker.RProj` to load the project in RStudio.
+Open `docker_presentation.RProj` to load the project in RStudio.
 
 ## Using Docker Compose
 
@@ -257,25 +259,60 @@ docker compose down      # Stop and remove container
 
 ## Example Dataset
 
-We replicate analyses from @angele2023does — a lexical decision experiment examining masked priming effects:
+A lexical decision experiment with a flanker manipulation:
 
 :::: {.columns}
 
 ::: {.column width="50%"}
 **Design**
 
-- **Prime-target relationship**: related vs. unrelated
-- **Prime duration**: 33 ms, 50 ms, 67 ms
+- **Stimulus type**: words vs. pseudowords
+- **Gender**: feminine vs. masculine targets
+- **Condition**: concordant (AGR) vs. discordant (DIS) flanker articles
 - Participants and items crossed (fully counterbalanced)
 :::
 
 ::: {.column width="50%"}
 **Outcome measures**
 
-- Response times (RT) in ms
-- Accuracy (proportion correct)
+- Response times (RT) in seconds
+- Accuracy (correct lexical decisions)
 
-**Key question:** Do related primes speed up target recognition?
+**Key question:** Do gender-congruent flankers facilitate lexical decisions?
+:::
+
+::::
+
+## Example Trial Display
+
+Each trial shows a target word (or pseudoword) flanked by articles.
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+**Concordant (AGR)**
+
+Target word *mesa* (feminine) — flanker *la* (feminine)
+
+<div style="width:340px; height:180px; border:3px solid #000; border-radius:8px; background:#fff; display:flex; align-items:center; justify-content:center; margin:10px auto;">
+  <span style="color:#000; font-size:28px; font-family:monospace; letter-spacing:8px;">la&nbsp;&nbsp;mesa&nbsp;&nbsp;la</span>
+</div>
+
+Press **L** for feminine
+:::
+
+::: {.column width="50%"}
+
+**Discordant (DIS)**
+
+Target word *mesa* (feminine) — flanker *el* (masculine)
+
+<div style="width:340px; height:180px; border:3px solid #000; border-radius:8px; background:#fff; display:flex; align-items:center; justify-content:center; margin:10px auto;">
+  <span style="color:#000; font-size:28px; font-family:monospace; letter-spacing:8px;">el&nbsp;&nbsp;mesa&nbsp;&nbsp;el</span>
+</div>
+
+Press **A** for masculine
 :::
 
 ::::
@@ -288,35 +325,44 @@ Mixed models include **random effects** for both:
 :::: {.columns}
 
 ::: {.column width="33%"}
+<div style="font-size:0.8em;">
+
 **Random intercepts only**
 
 Each participant has a different baseline RT, but the *effect* of condition is the same for everyone.
 
 ```r
-RT ~ condition + 
-  (1 | participant) + 
-  (1 | item)
+rt ~ Condition * Gender + 
+  (1 | PROLIFIC_PID) + 
+  (1 | Target)
 ```
+</div>
 :::
 
 ::: {.column width="33%"}
+<div style="font-size:0.8em;">
+
 **Random intercepts + slopes**
 
 Each participant also has a different *effect* of condition.
 
 ```r
-RT ~ condition + 
-  (condition | participant) +
-  (condition | item)
+rt ~ Condition * Gender + 
+  (Condition * Gender | PROLIFIC_PID) +
+  (Condition | Target)
 ```
+</div>
 :::
 
 ::: {.column width="33%"}
+<div style="font-size:0.8em;">
+
 **Why it matters**
 
 - Avoids pseudoreplication
 - By-item random effects: items differ in difficulty
 - Converges to correct Type I error rates
+</div>
 :::
 
 ::::
@@ -328,20 +374,30 @@ RT ~ condition +
 #| 
 library(lme4)
 library(buildmer)
+library(tidyverse)
 
-# Load and filter data
-data <- readr::read_csv(
-  "../data/data_exp1.csv"
-) |>
-  dplyr::filter(acc != -1)
+# Read all PsychoJS trial data
+exp2_all_csv_content <- fs::dir_ls(path = "../data", glob = "*.csv") %>%
+  map_dfr(read_csv, .id = "source", col_type = cols(
+    .default = col_character(), rt = col_double(), corr = col_integer(), TrialID = col_integer()))
 
-# Fit maximal random effects model using buildmer
-# (automatically finds the largest converging model)
+exp2 <- exp2_all_csv_content |>
+  group_by(PROLIFIC_PID) |>
+  mutate(counterbalancing_condition = counterbalancing_condition[1]) |>
+  ungroup() |>
+  filter(!is.na(TrialID) & TrialID < 2000) |>
+  mutate(Target = Prime) |>
+  filter(rt > .25 & rt < 1.8 & corr == 1 & StimulusType == "WORD")
+
+exp2$Condition <- factor(exp2$Condition, levels = c("AGR", "DIS"))
+exp2$Gender <- factor(exp2$Gender, levels = c("FEM", "MAS"))
+
+# Fit model using buildmer
 model_rt <- buildmer(
-  RT ~ condition * prime_duration +
-    (condition * prime_duration | participant) +
-    (condition * prime_duration | target),
-  data = data,
+  rt ~ Condition * Gender +
+    (Condition * Gender | PROLIFIC_PID) +
+    (Condition | Target),
+  data = exp2,
   buildmerControl = buildmerControl(direction = "order")
 )
 
@@ -349,48 +405,150 @@ summary(model_rt)
 ```
 
 ::: {.callout-note}
-**buildmer** [@buildmer] automatically reduces the random effects structure to find the maximal converging model — saving considerable trial and error.
+**buildmer** [@voeten2025buildmer] automatically reduces the random effects structure to find the maximal converging model — saving considerable trial and error.
 :::
 
-## Bayesian Analysis: brms
+## Bayesian Analysis: brms (pre-computed)
 
 ```{r}
 #| cache: true
-#| 
 library(brms)
+library(qs2)
+library(gt)
+library(tidyverse)
 
-prior_exp1 <- c(set_prior("normal(0,1)", class = "b"))
+# Load pre-computed models (run in analysis_exp2.R)
+blmm_exp2_rt_dist <- qs_read("../analysis/blmm_exp2_rt_dist.qs")
+blmm_acc_exp2 <- qs_read("../analysis/blmm_acc_exp2.qs")
+```
 
-blmm_exp1_rt_dist <- brm(data = exp1_data_to_include %>% filter(corr == 1 & StimulusType == "Word" & rt > 250 & rt < 1800), 
-                    bf(rt ~ Condition * PrimeDuration + (1 + Condition * PrimeDuration|source) + (1 + Condition * PrimeDuration|Target), beta ~ Condition * PrimeDuration + (1 + Condition * PrimeDuration|source) + (1 + Condition * PrimeDuration|Target)),
-                    warmup = 1000,
-                    iter = 5000,
-                    chains = 4,
-                    prior = prior_exp1,
-                    family = exgaussian(),
-                    inits = "random",
-                    control = list(adapt_delta = 0.8),
-                    cores = 4, backend = "cmdstanr", threads = threading(4))                
+<div style="font-size:0.55em;">
 
-# Fit Bayesian LMM for RT
-model_brms_rt <- brm(
-  log(RT) ~ condition * prime_duration +
-    (condition * prime_duration | participant) +
-    (condition * prime_duration | target),
-  data   = data,
-  family = gaussian(),
-  chains = 4,
-  iter   = 4000,
-  cores  = 4,
-  backend = "cmdstanr",   # Use CmdStanR backend
-  threads = threading(2),
-  silent = 0
+Models were fit using an **exgaussian** distribution for RT:
+
+```r
+# RT model (words only, correct responses, 0.25s < RT < 1.8s)
+blmm_exp2_rt_dist <- brm(
+  data = exp2 |> filter(rt > .25 & rt < 1.8 & corr == 1 & StimulusType == "WORD"),
+  formula = bf(
+    rt ~ Condition * Gender + (Condition * Gender | PROLIFIC_PID) + (Condition | Target),
+    beta ~ Condition * Gender + (Condition * Gender | PROLIFIC_PID) + (Condition | Target)
+  ),
+  family = exgaussian(), chains = 4, iter = 5000, backend = "cmdstanr"
+)
+
+# Accuracy model (Bernoulli logistic regression)
+blmm_acc_exp2 <- brm(
+  data = exp2 |> filter(rt > .25 & rt < 1.8 & corr != -1 & StimulusType == "WORD"),
+  formula = bf(corr ~ Condition * Gender + (Condition * Gender | PROLIFIC_PID) + (Condition | Target)),
+  family = bernoulli(), chains = 4, iter = 5000, backend = "cmdstanr"
 )
 ```
 
+</div>
+
 ::: {.callout-tip}
-**CmdStanR** is recommended over RStan: it supports the latest Stan features including **hyperthreading** (`threads_per_chain`) for faster sampling.
+Models were run separately via `analysis_exp2.R` and saved with **qs2** for fast loading. No need to re-run MCMC in the presentation!
 :::
+
+## Results: RT Model (Ex-Gaussian)
+
+```{r}
+#| cache: true
+#| label: tbl-rt
+parameter_names <- c(
+  "Intercept",
+  "Intercept",
+  "Concordant vs. Discordant Flanker",
+  "Grammatical Gender (Feminine vs. Masculine)",
+  "Concordant vs. Discordant:Grammatical Gender",
+  "Concordant vs. Discordant Flanker",
+  "Grammatical Gender (Feminine vs. Masculine)",
+  "Concordant vs. Discordant:Grammatical Gender"
+)
+
+blmm_exp2_rt_dist_summary <- cbind(parameter_names, summary(blmm_exp2_rt_dist)$fixed %>% select(-Rhat, -ends_with("_ESS")))
+
+colnames(blmm_exp2_rt_dist_summary) <- c("parameter", "estimate", "SE", "lower", "upper")
+
+beta_or_not <- if_else(rownames(blmm_exp2_rt_dist_summary) %>% startsWith("beta_"), true = "beta", "mu")
+
+gt(blmm_exp2_rt_dist_summary, rowname_col = "parameter") %>%
+  tab_row_group(id = "mu", label = md("Parameter: $\\mu$"), rows = which(beta_or_not == "mu")) %>%
+  tab_row_group(id = "beta", label = md("Parameter: $\\beta$"), rows = which(beta_or_not == "beta")) %>%
+  row_group_order(c("mu", "beta")) %>%
+  cols_label(
+    parameter = "Parameter",
+    estimate = "b",
+    SE = "SE",
+    lower = "2.5%",
+    upper = "97.5%"
+  ) %>%
+  tab_spanner(
+    label = "Estimate",
+    columns = c(estimate, SE)
+  ) %>%
+  tab_spanner(
+    label = "Credible Interval (b)",
+    columns = c(lower, upper)
+  ) %>%
+  fmt_number(
+    columns = c(estimate, SE, lower, upper),
+    decimals = 3
+  ) %>% tab_style(
+    style = list(
+      cell_text(weight = "bold")),
+    locations = cells_body(
+      columns = c(estimate, SE, lower, upper),
+      rows = ((lower > 0 & upper > 0) | (lower < 0 & upper < 0))
+    )) %>%
+  tab_source_note(source_note = md("Note: *b* = coefficient estimate; *SE* = standard error; *2.5%* and *97.5%* = lower and upper bounds of the 95% credible interval. Coefficients for which the 95% credible interval does not include 0 are shown in **bold**."))
+```
+
+## Results: Accuracy Model (Bernoulli)
+
+```{r}
+#| cache: true
+#| label: tbl-acc
+parameter_names_acc <- c(
+  "Intercept",
+  "Concordant vs. Discordant Flanker",
+  "Grammatical Gender (Feminine vs. Masculine)",
+  "Concordant vs. Discordant:Grammatical Gender"
+)
+
+blmm_acc_exp2_summary <- cbind(parameter_names_acc, summary(blmm_acc_exp2)$fixed %>% select(-Rhat, -ends_with("_ESS")))
+
+colnames(blmm_acc_exp2_summary) <- c("parameter", "estimate", "SE", "lower", "upper")
+
+gt(blmm_acc_exp2_summary, rowname_col = "parameter") %>%
+  cols_label(
+    parameter = "Parameter",
+    estimate = "b",
+    SE = "SE",
+    lower = "2.5%",
+    upper = "97.5%"
+  ) %>%
+  tab_spanner(
+    label = "Estimate",
+    columns = c(estimate, SE)
+  ) %>%
+  tab_spanner(
+    label = "Credible Interval (b)",
+    columns = c(lower, upper)
+  ) %>%
+  fmt_number(
+    columns = c(estimate, SE, lower, upper),
+    decimals = 3
+  ) %>% tab_style(
+    style = list(
+      cell_text(weight = "bold")),
+    locations = cells_body(
+      columns = c(estimate, SE, lower, upper),
+      rows = ((lower > 0 & upper > 0) | (lower < 0 & upper < 0))
+    )) %>%
+  tab_source_note(source_note = md("Note: *b* = log-odds coefficient estimate; *SE* = standard error; *2.5%* and *97.5%* = lower and upper bounds of the 95% credible interval. Coefficients for which the 95% credible interval does not include 0 are shown in **bold**."))
+```
 
 ## Why Bayesian? {.smaller}
 
@@ -407,62 +565,68 @@ model_brms_rt <- brm(
 
 Docker makes Bayesian analyses **accessible** — no need to manually install Stan!
 
-## Results: Visualising the Data
+## Results: Visualizing the Data
 
-```r
+Lines show individual participant means; points and bold lines show group means.
+
+```{r}
+#| cache: true
 library(ggplot2)
-library(papaja)
+library(tidyverse)
 
-# Plot mean RT by condition and participant
-participant_rel <- data |>
-  dplyr::filter(stimulus_type == "Word") |>
-  group_by(participant, condition) |>
-  summarise(mean_rt = mean(RT, na.rm = TRUE), .groups = "drop")
+# Read and filter data for visualization
+exp2_all_csv_content <- fs::dir_ls(path = "../data", glob = "*.csv") %>%
+  map_dfr(read_csv, .id = "source", col_type = cols(
+    .default = col_character(), rt = col_double(), corr = col_integer(), TrialID = col_integer()))
 
-ggplot(participant_rel, aes(condition, mean_rt)) +
+exp2_plot_data <- exp2_all_csv_content |>
+  group_by(PROLIFIC_PID) |>
+  mutate(counterbalancing_condition = counterbalancing_condition[1]) |>
+  ungroup() |>
+  filter(!is.na(TrialID) & TrialID < 2000) |>
+  filter(rt > .25 & rt < 1.8 & corr == 1 & StimulusType == "WORD") |>
+  mutate(Condition = factor(Condition, levels = c("AGR", "DIS")),
+         Gender = factor(Gender, levels = c("FEM", "MAS")))
+
+# Plot mean RT by Condition and Gender
+participant_means <- exp2_plot_data |>
+  group_by(PROLIFIC_PID, Condition, Gender) |>
+  summarise(mean_rt = mean(rt, na.rm = TRUE), .groups = "drop")
+
+ggplot(participant_means, aes(Condition, mean_rt, color = Gender)) +
   geom_line(
-    aes(group = participant, color = as.factor(participant)),
-    linewidth = 0.6, alpha = 0.4
+    aes(group = interaction(PROLIFIC_PID, Gender)),
+    linewidth = 0.4, alpha = 0.2, position = position_dodge(0.1)
   ) +
   stat_summary(
-    aes(group = 1), fun = mean, geom = "line",
-    linewidth = 1, color = "black"
+    aes(group = Gender), fun = mean, geom = "line",
+    linewidth = 1.2, position = position_dodge(0.2)
   ) +
   stat_summary(
-    aes(group = 1), fun = mean, geom = "point",
-    size = 2, color = "black"
+    aes(group = Gender), fun = mean, geom = "point",
+    size = 3, position = position_dodge(0.2)
   ) +
-  labs(x = "Prime-target relationship", y = "Response times (ms)") +
-  papaja::theme_apa() +
-  theme(legend.position = "none")
+  labs(x = "Condition (AGR = concordant, DIS = discordant)",
+       y = "Response times (s)", color = "Gender") +
+  theme_minimal(base_size = 14)
 ```
 
 ## Post-hoc Comparisons with emmeans
 
-```r
+```{r}
+#| cache: true
 library(emmeans)
 
-# Extract estimated marginal means
-emm <- emmeans(model_rt, ~ condition * prime_duration)
+# Extract estimated marginal means from the Bayesian RT model
+emm <- emmeans(blmm_exp2_rt_dist, ~ Condition * Gender)
 
-# Pairwise comparisons: related vs. unrelated at each prime duration
-contrast(emm, method = "pairwise", by = "prime_duration")
-```
-
-Output:
-```
-prime_duration = 33ms:
-  contrast              estimate   SE  df t.ratio p.value
-  related - unrelated     -18.3  4.2 189  -4.36   <.001
-
-prime_duration = 50ms:
-  contrast              estimate   SE  df t.ratio p.value
-  related - unrelated     -22.1  4.5 191  -4.91   <.001
+# Pairwise comparisons: concordant vs discordant at each gender
+contrast(emm, method = "pairwise", by = "Gender")
 ```
 
 . . .
 
-Related primes **significantly reduced** response times compared to unrelated primes.
+Concordant flankers **credibly speed up** response times for feminine and masculine targets.
 
 # Reproducible Manuscripts
 
@@ -483,12 +647,10 @@ Related primes **significantly reduced** response times compared to unrelated pr
 
 ::: {.column width="50%"}
 **Prose** (Markdown)
-```markdown
-The related prime condition 
-was `r round(estimate, 1)` ms 
-faster than unrelated 
-(*p* < .001).
-```
+
+The concordant condition
+was **X.X** ms faster
+than discordant (*p* < .001).
 :::
 
 ::: {.column width="50%"}
@@ -498,8 +660,8 @@ faster than unrelated
 #| tbl-cap: "Descriptive statistics"
 
 data |>
-  group_by(condition) |>
-  summarise(M = mean(RT), SD = sd(RT)) |>
+  group_by(Condition, Gender) |>
+  summarise(M = mean(rt), SD = sd(rt)) |>
   flextable()
 ```
 :::
@@ -539,12 +701,12 @@ my_project/
 ├── data/
 │   └── experiment_data.csv     # Raw data
 └── outputs/
-    ├── model_rt.qs             # Cached model results
+    ├── model_rt.qs2            # Cached model results
     └── figures/                # Generated figures
 ```
 
 ::: {.callout-tip}
-Cache computationally intensive operations (like brms models) with `cache: true` or save them with `qs2::qsave()` so the manuscript compiles quickly on subsequent runs.
+Cache computationally intensive operations (like brms models) with `cache: true` or save them with `qs2::qs_save()` so the manuscript compiles quickly on subsequent runs.
 :::
 
 # Customizing Your Container
@@ -601,9 +763,142 @@ services:
 | `docker build -t name .` | Build image from Dockerfile |
 | `docker push name:tag` | Push image to Docker Hub |
 
+# Devcontainers & AI Agents
+
+## Dev Containers in VS Code {.smaller}
+
+<div style="font-size:0.85em;">
+
+**Dev Containers** let you open any project inside a fully configured Docker container directly in VS Code.
+
+- Uses a `.devcontainer/devcontainer.json` file to define the environment
+- VS Code connects to the container — full IntelliSense, debugging, terminal
+- Same environment on every machine, every collaborator
+- Also works with **GitHub Codespaces** — a full VS Code dev environment in the browser, powered by the same container
+
+```json
+{
+  "name": "R Analysis",
+  "image": "bangele1/analysis-in-a-box-rocker:latest",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "REditorSupport.r",
+        "quarto.quarto",
+        "ms-toolsai.jupyter"
+      ]
+    }
+  }
+}
+```
+
+</div>
+
+## Dev Containers + AI Agents {.smaller}
+
+<div style="font-size:0.85em;">
+
+Dev containers unlock powerful **AI-assisted coding workflows** in VS Code:
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**GitHub Copilot / Copilot Chat**
+
+- Autocomplete R, Stan, and Quarto code
+- Ask questions about your data or model output inline
+- Works inside the container — same packages as your analysis
+:::
+
+::: {.column width="50%"}
+**AI Agent Tools (e.g., Claude Code, opencode)**
+
+- Autonomous agents that read, edit, and run code
+- Install packages, fix errors, write tests — all inside the container
+- Reproducible: the agent works in your exact environment
+:::
+
+::::
+
+::: {.callout-important}
+**Security**: AI agents confined to a devcontainer cannot access your host filesystem, credentials, or other projects. The container acts as a sandbox — agents can only see and modify files you mount into it.
+:::
+
+::: {.callout-tip}
+Combine `devcontainer.json` with a Docker image to give AI agents a **fully specified environment** — no ambiguity about package versions or system dependencies.
+:::
+
+</div>
+
+# Beyond R: OpenSesame Experiments
+
+## Testing Experiments with Docker
+
+Docker isn't just for R analyses — use it to **test behavioral experiments** before deploying in the lab.
+
+<div style="font-size:0.8em;">
+
+:::: {.columns}
+
+::: {.column width="70%"}
+**OpenSesame Test Container**
+
+- Pre-built image: <https://hub.docker.com/r/bangele1/opensesame-test-container>
+- OpenSesame + PsychoPy + PyGaze
+- Virtual desktop via NoVNC — access the GUI in your browser
+- Runs on **amd64 and arm64** (Apple Silicon)
+:::
+
+::: {.column width="30%"}
+**Use cases**
+
+- Test experiments before running participants
+- Share reproducible experiment environments with collaborators
+- Run on any machine — no local install needed
+:::
+
+::::
+
+</div>
+
+## OpenSesame: Getting Started {.smaller}
+
+<div style="font-size:0.85em;">
+
+Create a `docker-compose.yml` in your experiment folder:
+
+```yaml
+services:
+  opensesame-dev:
+    image: bangele1/opensesame-test-container
+    volumes:
+      - ..:/workspaces/experiments
+    ports:
+      - "8080:8080"
+    cap_add:
+      - SYS_ADMIN
+    restart: unless-stopped
+```
+
+Then run:
+
+```bash
+docker compose up -d
+```
+
+Open **<http://localhost:8080>** in your browser to access the virtual desktop with OpenSesame.
+
+</div>
+
+::: {.callout-tip}
+The container uses `Xvfb` + `x11vnc` + `novnc` to render the GUI in the browser — no display server needed on the host machine.
+:::
+
 # Summary
 
 ## What We've Covered
+
+<div style="font-size:0.8em;">
 
 ::: {.incremental}
 1. **The Problem**: Complex R environments are hard to install and replicate
@@ -611,9 +906,13 @@ services:
 3. **Available Images**: Rocker project and b-data images for R + RStudio
 4. **Running the Container**: One command to get a full R/RStudio/brms environment
 5. **Analyses**: lme4/buildmer for frequentist, brms/CmdStanR for Bayesian models
-6. **Reproducible Manuscripts**: Quarto + Docker = fully reproducible research
-7. **Customization**: Docker Compose and Dockerfiles for advanced use cases
+6. **Caching**: qs2 for fast loading of pre-computed brms models
+7. **Reproducible Manuscripts**: Quarto + Docker = fully reproducible research
+8. **Customization**: Docker Compose and Dockerfiles for advanced use cases
+9. **Dev Containers + AI Agents**: VS Code dev containers with Copilot and AI coding tools
 :::
+
+</div>
 
 ## Getting Started Today
 
