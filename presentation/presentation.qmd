@@ -1,0 +1,649 @@
+---
+title: "Analysis in a Box"
+subtitle: "A Practical Guide to Using RStudio with Docker"
+author:
+  - name: Ismael Gutiérrez-Cordero
+    affiliation: Universidad de Málaga
+  - name: Bernhard Angele
+    affiliation: Universidad Antonio de Nebrija
+date: today
+format:
+  revealjs:
+    theme: default
+    slide-number: true
+    toc: true
+    toc-depth: 1
+    toc-title: "Overview"
+    logo: ""
+    footer: "Analysis in a Box | RStudio + Docker"
+    code-fold: false
+    code-tools: true
+    highlight-style: github
+    transition: slide
+    incremental: false
+    chalkboard: true
+bibliography: references.bib
+---
+
+# The Problem
+
+## Modern Analyses Are Complex
+
+::: {.incremental}
+- Behavioral and neuroscientific data analysis has become **increasingly complex**
+- ANOVAs are no longer sufficient — researchers now use:
+  - (Generalized) Linear Mixed Models (GLMMs) via **lme4** [@bates2015fitting]
+  - Bayesian multilevel models via **brms** [@burkner2017brms]
+- *brms* requires a large number of dependencies:
+  - Stan [@stan2025] for MCMC sampling
+  - CmdStanR [@gabry2025] (recommended) or RStan [@rstan2025]
+  - A modern C++ compiler (RTools on Windows, XCode on Mac)
+:::
+
+## Installation Challenges
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**New Users**
+
+- Overwhelmed by complex installation chains
+- Multiple tools to install before writing a single line of R
+- Different instructions per operating system
+:::
+
+::: {.column width="50%"}
+**Experienced Users**
+
+- Significant time spent re-installing and updating packages
+- Package updates can break existing code
+- Replicating analyses from even a few years ago can fail
+:::
+
+::::
+
+## The Reproducibility Gap
+
+> *"Computational results cannot be comprehensively evaluated without knowing the code used to perform the computations."*
+> — @ince2012case
+
+::: {.incremental}
+- Package versions change constantly, breaking analysis code
+- Solutions like **renv** [@renv] require significant effort from both authors and readers
+- We need a simpler, more robust approach...
+:::
+
+# Docker to the Rescue
+
+## What Is Docker?
+
+::: {.callout-note}
+**Docker** is an open-source platform that allows users to run applications in isolated environments called **containers**.
+:::
+
+Key concepts:
+
+| Term | Meaning |
+|------|---------|
+| **Image** | A pre-built software package with all code and configuration |
+| **Container** | A running instance of an image — isolated from the host |
+| **Docker Hub** | Public repository for sharing Docker images |
+
+## Why Docker for R Analyses?
+
+::: {.incremental}
+- **Consistency**: The same image runs identically on any machine
+- **Reproducibility**: Freeze your exact software environment as an image
+- **Ease of setup**: One command to get a fully working R + RStudio + brms environment
+- **Shareability**: Push your image to Docker Hub; anyone can pull and run it
+- **Versioning**: Images can build on each other — add packages to an existing base
+:::
+
+## Available Base Images
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**🐳 Rocker Project** [@rocker2017]
+
+- <https://rocker-project.org>
+- R + RStudio + tidyverse/verse
+- Versioned by R version
+- Best for **Intel/AMD64** (Windows/Linux)
+- `rocker/verse:4.5.3`
+:::
+
+::: {.column width="50%"}
+**🐳 b-data Images**
+
+- <https://gitlab.com/b-data>
+- R + RStudio + tidyverse/verse  
+- Supports **both amd64 AND arm64**
+- Best for **Apple M-series** and ARM Windows
+- Recommended for maximum performance on ARM
+:::
+
+::::
+
+## Our "Analysis in a Box" Image
+
+We built a custom image on top of Rocker verse that includes:
+
+- base R + RStudio Server
+- tidyverse and data processing packages
+- **brms** with CmdStanR (pre-compiled!)
+- lme4, buildmer, emmeans
+- Quarto + apaquarto template
+- LaTeX / TinyTeX for PDF rendering
+
+**Available on Docker Hub:**  
+<https://hub.docker.com/r/bangele1/analysis-in-a-box-rocker>
+
+# Getting Started
+
+## Prerequisites
+
+1. **Install Docker Desktop**
+
+   Follow the official guide: <https://docs.docker.com/get-started/introduction/get-docker-desktop/>
+
+2. **Verify Docker is working:**
+
+   ```bash
+   docker run -d -p 8081:80 docker/welcome-to-docker
+   ```
+
+   Then open <http://localhost:8081> in your browser.
+
+3. **Create a working folder** (where your files will be saved):
+
+   ::: {.panel-tabset}
+   ### Windows CMD
+   ```cmd
+   mkdir %USERPROFILE%\Documents\analysis_box
+   cd %USERPROFILE%\Documents\analysis_box
+   ```
+
+   ### macOS / Linux
+   ```bash
+   mkdir -p ~/Documents/analysis_box
+   cd ~/Documents/analysis_box
+   ```
+   :::
+
+## Running the Container
+
+Navigate to your working folder and run:
+
+::: {.panel-tabset}
+
+### Windows CMD
+
+```cmd
+docker run -e PASSWORD=yourpassword -p 8787:8787 ^
+  -v "%cd%":/home/rstudio ^
+  bangele1/analysis-in-a-box-rocker:latest
+```
+
+### macOS / Linux
+
+```bash
+docker run -e PASSWORD=yourpassword -p 8787:8787 \
+  -v $(pwd):/home/rstudio \
+  bangele1/analysis-in-a-box-rocker:latest
+```
+
+:::
+
+. . .
+
+What do these options mean?
+
+- **`-e PASSWORD=yourpassword`** — sets the RStudio Server login password
+- **`-p 8787:8787`** — exposes port 8787 to your browser
+- **`-v $(pwd):/home/rstudio`** — mounts your local folder inside the container
+
+## Accessing RStudio
+
+1. Open your browser and navigate to **<http://127.0.0.1:8787>**
+
+2. Log in with:
+   - **Username:** `rstudio`
+   - **Password:** *(whatever you set after `PASSWORD=`)*
+
+3. You now have a **fully working RStudio environment** with brms, CmdStanR, and all dependencies pre-installed!
+
+::: {.callout-tip}
+The CLI/terminal window must remain open for the container to stay running.
+:::
+
+## Downloading the Example Files
+
+Inside RStudio, open the **Terminal** tab and run:
+
+```bash
+git clone https://github.com/ismaelgutier/analysis_with_docker.git
+```
+
+This downloads the example data and analysis scripts.  
+Open `analysis_with_docker.RProj` to load the project in RStudio.
+
+## Using Docker Compose
+
+For more complex setups, use **Docker Compose** instead of a long `docker run` command.
+
+Create a file called `docker-compose.yml`:
+
+```yaml
+services:
+  analysis-in-a-box:
+    image: bangele1/analysis-in-a-box-rocker:latest
+    environment:
+      - PASSWORD=yourpassword
+    ports:
+      - "8787:8787"
+    volumes:
+      - .:/home/rstudio
+```
+
+Then run:
+
+```bash
+docker compose up -d     # Start container in background
+docker compose down      # Stop and remove container
+```
+
+# Analyses with Docker
+
+## Example Dataset
+
+We replicate analyses from @angele2023does — a lexical decision experiment examining masked priming effects:
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Design**
+
+- **Prime-target relationship**: related vs. unrelated
+- **Prime duration**: 33 ms, 50 ms, 67 ms
+- Participants and items crossed (fully counterbalanced)
+:::
+
+::: {.column width="50%"}
+**Outcome measures**
+
+- Response times (RT) in ms
+- Accuracy (proportion correct)
+
+**Key question:** Do related primes speed up target recognition?
+:::
+
+::::
+
+## Mixed-Effects Models: Why?
+
+Standard ANOVA treats participants (or items) as the only random source of variability.  
+Mixed models include **random effects** for both:
+
+:::: {.columns}
+
+::: {.column width="33%"}
+**Random intercepts only**
+
+Each participant has a different baseline RT, but the *effect* of condition is the same for everyone.
+
+```r
+RT ~ condition + 
+  (1 | participant) + 
+  (1 | item)
+```
+:::
+
+::: {.column width="33%"}
+**Random intercepts + slopes**
+
+Each participant also has a different *effect* of condition.
+
+```r
+RT ~ condition + 
+  (condition | participant) +
+  (condition | item)
+```
+:::
+
+::: {.column width="33%"}
+**Why it matters**
+
+- Avoids pseudoreplication
+- By-item random effects: items differ in difficulty
+- Converges to correct Type I error rates
+:::
+
+::::
+
+## Frequentist Analysis: lme4 + buildmer
+
+```{r}
+#| cache: true
+#| 
+library(lme4)
+library(buildmer)
+
+# Load and filter data
+data <- readr::read_csv(
+  "../data/data_exp1.csv"
+) |>
+  dplyr::filter(acc != -1)
+
+# Fit maximal random effects model using buildmer
+# (automatically finds the largest converging model)
+model_rt <- buildmer(
+  RT ~ condition * prime_duration +
+    (condition * prime_duration | participant) +
+    (condition * prime_duration | target),
+  data = data,
+  buildmerControl = buildmerControl(direction = "order")
+)
+
+summary(model_rt)
+```
+
+::: {.callout-note}
+**buildmer** [@buildmer] automatically reduces the random effects structure to find the maximal converging model — saving considerable trial and error.
+:::
+
+## Bayesian Analysis: brms
+
+```{r}
+#| cache: true
+#| 
+library(brms)
+
+prior_exp1 <- c(set_prior("normal(0,1)", class = "b"))
+
+blmm_exp1_rt_dist <- brm(data = exp1_data_to_include %>% filter(corr == 1 & StimulusType == "Word" & rt > 250 & rt < 1800), 
+                    bf(rt ~ Condition * PrimeDuration + (1 + Condition * PrimeDuration|source) + (1 + Condition * PrimeDuration|Target), beta ~ Condition * PrimeDuration + (1 + Condition * PrimeDuration|source) + (1 + Condition * PrimeDuration|Target)),
+                    warmup = 1000,
+                    iter = 5000,
+                    chains = 4,
+                    prior = prior_exp1,
+                    family = exgaussian(),
+                    inits = "random",
+                    control = list(adapt_delta = 0.8),
+                    cores = 4, backend = "cmdstanr", threads = threading(4))                
+
+# Fit Bayesian LMM for RT
+model_brms_rt <- brm(
+  log(RT) ~ condition * prime_duration +
+    (condition * prime_duration | participant) +
+    (condition * prime_duration | target),
+  data   = data,
+  family = gaussian(),
+  chains = 4,
+  iter   = 4000,
+  cores  = 4,
+  backend = "cmdstanr",   # Use CmdStanR backend
+  threads = threading(2),
+  silent = 0
+)
+```
+
+::: {.callout-tip}
+**CmdStanR** is recommended over RStan: it supports the latest Stan features including **hyperthreading** (`threads_per_chain`) for faster sampling.
+:::
+
+## Why Bayesian? {.smaller}
+
+| Feature | Frequentist (lme4) | Bayesian (brms) |
+|---------|-------------------|-----------------|
+| Output | p-values, confidence intervals | Posterior distributions |
+| Interpretation | "If H₀ is true, probability of data ≥ this extreme" | "Probability distribution over parameter values" |
+| Uncertainty | Asymptotic confidence intervals | Full credible intervals |
+| Complex models | May fail to converge | More robust via MCMC |
+| Prior information | Not used | Can incorporate prior knowledge |
+| Computation | Fast | Slower (MCMC sampling) |
+
+. . .
+
+Docker makes Bayesian analyses **accessible** — no need to manually install Stan!
+
+## Results: Visualising the Data
+
+```r
+library(ggplot2)
+library(papaja)
+
+# Plot mean RT by condition and participant
+participant_rel <- data |>
+  dplyr::filter(stimulus_type == "Word") |>
+  group_by(participant, condition) |>
+  summarise(mean_rt = mean(RT, na.rm = TRUE), .groups = "drop")
+
+ggplot(participant_rel, aes(condition, mean_rt)) +
+  geom_line(
+    aes(group = participant, color = as.factor(participant)),
+    linewidth = 0.6, alpha = 0.4
+  ) +
+  stat_summary(
+    aes(group = 1), fun = mean, geom = "line",
+    linewidth = 1, color = "black"
+  ) +
+  stat_summary(
+    aes(group = 1), fun = mean, geom = "point",
+    size = 2, color = "black"
+  ) +
+  labs(x = "Prime-target relationship", y = "Response times (ms)") +
+  papaja::theme_apa() +
+  theme(legend.position = "none")
+```
+
+## Post-hoc Comparisons with emmeans
+
+```r
+library(emmeans)
+
+# Extract estimated marginal means
+emm <- emmeans(model_rt, ~ condition * prime_duration)
+
+# Pairwise comparisons: related vs. unrelated at each prime duration
+contrast(emm, method = "pairwise", by = "prime_duration")
+```
+
+Output:
+```
+prime_duration = 33ms:
+  contrast              estimate   SE  df t.ratio p.value
+  related - unrelated     -18.3  4.2 189  -4.36   <.001
+
+prime_duration = 50ms:
+  contrast              estimate   SE  df t.ratio p.value
+  related - unrelated     -22.1  4.5 191  -4.91   <.001
+```
+
+. . .
+
+Related primes **significantly reduced** response times compared to unrelated primes.
+
+# Reproducible Manuscripts
+
+## The Open Science Case
+
+::: {.incremental}
+- @munafo2017manifesto: need for open data and transparent analysis workflows
+- @ince2012case: computational results cannot be evaluated without the code
+- @lindsay2023plea: computational reproducibility must be verified *before* publishing
+- @morey2016peer: reviewers should not evaluate manuscripts without data and analysis pipeline
+:::
+
+## Quarto for Reproducible Manuscripts
+
+**Quarto** (<https://quarto.org>) combines:
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Prose** (Markdown)
+```markdown
+The related prime condition 
+was `r round(estimate, 1)` ms 
+faster than unrelated 
+(*p* < .001).
+```
+:::
+
+::: {.column width="50%"}
+**Code** (R or Python chunks)
+```r
+#| label: tbl-summary
+#| tbl-cap: "Descriptive statistics"
+
+data |>
+  group_by(condition) |>
+  summarise(M = mean(RT), SD = sd(RT)) |>
+  flextable()
+```
+:::
+
+::::
+
+. . .
+
+- Output formats: HTML, PDF (via LaTeX), Word
+- Compatible with **apaquarto** [@schneider2025apaquarto] for APA-formatted manuscripts
+
+## Docker + Quarto = Fully Reproducible Manuscripts
+
+::: {.incremental}
+1. Write your manuscript as a `.qmd` file with embedded R code
+2. Build and push a Docker image with your exact R environment
+3. Any reader can pull the image and compile the manuscript, reproducing every number
+4. The Rocker **verse** image includes Quarto + TinyTeX out of the box
+5. Our "Analysis in a Box" image adds all the packages needed for apaquarto manuscripts
+:::
+
+::: {.callout-important}
+This is the gold standard for reproducibility: the image is a **permanent record** of the software environment used to produce your results.
+:::
+
+## Manuscript Structure Example {.smaller}
+
+```
+my_project/
+├── docker-compose.yml          # Container configuration
+├── manuscript.qmd              # Main Quarto manuscript
+├── _introduction.qmd           # Chapter: Introduction
+├── _methods.qmd                # Chapter: Methods
+├── _analysis.qmd               # Chapter: Analysis (with R code)
+├── _results.qmd                # Chapter: Results
+├── references.bib              # Bibliography
+├── data/
+│   └── experiment_data.csv     # Raw data
+└── outputs/
+    ├── model_rt.qs             # Cached model results
+    └── figures/                # Generated figures
+```
+
+::: {.callout-tip}
+Cache computationally intensive operations (like brms models) with `cache: true` or save them with `qs2::qsave()` so the manuscript compiles quickly on subsequent runs.
+:::
+
+# Customizing Your Container
+
+## Building on an Existing Image
+
+To add packages to the base image, create a `Dockerfile`:
+
+```dockerfile
+FROM bangele1/analysis-in-a-box-rocker:latest
+
+# Install additional R packages
+RUN R -e "install.packages(c('mgcv', 'gratia', 'itsadug'))"
+
+# Install additional LaTeX packages
+RUN tlmgr install booktabs multirow
+```
+
+Build and push your custom image:
+
+```bash
+docker build -t myusername/my-analysis-image:latest .
+docker push myusername/my-analysis-image:latest
+```
+
+## Docker Compose with More Options
+
+```yaml
+services:
+  analysis-in-a-box:
+    image: bangele1/analysis-in-a-box-rocker:latest
+    environment:
+      - PASSWORD=yourpassword
+      - ROOT=true          # Enable sudo inside container
+    ports:
+      - "8787:8787"
+    volumes:
+      - .:/home/rstudio    # Working directory
+      - ./data:/data:ro    # Read-only data directory
+    cpus: "4"              # Limit CPU usage (standard Compose)
+    mem_limit: 8g          # Limit memory usage (standard Compose)
+```
+
+## Key Docker Commands
+
+| Command | Effect |
+|---------|--------|
+| `docker compose up -d` | Start container in background |
+| `docker compose down` | Stop and remove container |
+| `docker compose logs` | View container logs |
+| `docker ps` | List running containers |
+| `docker images` | List downloaded images |
+| `docker pull image:tag` | Download an image |
+| `docker build -t name .` | Build image from Dockerfile |
+| `docker push name:tag` | Push image to Docker Hub |
+
+# Summary
+
+## What We've Covered
+
+::: {.incremental}
+1. **The Problem**: Complex R environments are hard to install and replicate
+2. **Docker**: Containers provide isolated, reproducible environments
+3. **Available Images**: Rocker project and b-data images for R + RStudio
+4. **Running the Container**: One command to get a full R/RStudio/brms environment
+5. **Analyses**: lme4/buildmer for frequentist, brms/CmdStanR for Bayesian models
+6. **Reproducible Manuscripts**: Quarto + Docker = fully reproducible research
+7. **Customization**: Docker Compose and Dockerfiles for advanced use cases
+:::
+
+## Getting Started Today
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Pull the image:**
+```bash
+docker run \
+  -e PASSWORD=yourpassword \
+  -p 8787:8787 \
+  -v $(pwd):/home/rstudio \
+  bangele1/analysis-in-a-box-rocker:latest
+```
+
+Then open <http://127.0.0.1:8787>
+:::
+
+::: {.column width="50%"}
+**Resources:**
+
+- 📦 Docker Hub: [bangele1/analysis-in-a-box-rocker](https://hub.docker.com/r/bangele1/analysis-in-a-box-rocker)
+- 💻 GitHub: [ismaelgutier/analysis_with_docker](https://github.com/ismaelgutier/analysis_with_docker)
+- 🐳 Docker Desktop: [docs.docker.com](https://docs.docker.com/get-started/introduction/get-docker-desktop/)
+- 📖 Rocker Project: [rocker-project.org](https://rocker-project.org)
+:::
+
+::::
+
+## References {.smaller}
+
+::: {#refs}
+:::
