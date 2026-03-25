@@ -21,12 +21,23 @@ Then open [http://127.0.0.1:8787](http://127.0.0.1:8787) in your browser.
 
 In RStudio, go to **File > Open Project** and select `docker_presentation.Rproj`, or open it from the Files pane.
 
-### 3. Run the analysis
+### 3. Get the model files
 
-Open `analysis/analysis_exp2.R` in RStudio and run it. This fits the BRMS models and saves the results as `.qs2` files. **This must be done before building the presentation**, as the presentation loads these cached model files.
+The presentation requires pre-computed BRMS model files (`.qs2`). You have two options:
 
-> **Note:** This step requires CmdStanR and can take a long time to complete.
-> Alternatively, the files can be downloaded from [https://osf.io/avbh5/]
+**Option A — Download from OSF (recommended):**
+
+```r
+source("analysis/download_models.R")
+```
+
+This will download the cached model files from OSF if they are not already present.
+
+**Option B — Run the full analysis:**
+
+Open `analysis/analysis_exp2.R` in RStudio and run it. This fits the BRMS models from scratch and saves the results as `.qs2` files. This requires CmdStanR and can take a long time.
+
+> In both cases, the `.qs2` files must exist in `analysis/` before building the presentation.
 
 ### 4. Build the presentation
 
@@ -67,6 +78,7 @@ docker compose down     # Stop container
 docker_presentation/
 ├── analysis/
 │   ├── analysis_exp2.R          # BRMS analysis script
+│   ├── download_models.R        # Downloads cached models from OSF
 │   ├── blmm_exp2_rt_dist.qs     # Cached RT model
 │   └── blmm_acc_exp2.qs         # Cached accuracy model
 ├── data/                        # Raw participant CSV files
